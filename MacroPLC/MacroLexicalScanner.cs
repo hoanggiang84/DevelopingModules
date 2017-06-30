@@ -1,4 +1,5 @@
 ﻿using HPMacroComponents;
+using System.Collections.Generic;
 
 namespace MacroPLC
 {
@@ -42,15 +43,39 @@ namespace MacroPLC
             var c = lookNextChar();
 
             if(char.IsWhiteSpace(c))
-                return new Token(getWhiteToken(), TokenType.WHITE_SPACE);
+                return new Token(getWhiteString(), TokenType.WHITE_SPACE);
 
             if(char.IsDigit(c))
-                return new Token(getNumberToken(), TokenType.NUMBER);
+                return new Token(getNumberString(), TokenType.NUMBER);
             
+            if(char.IsLetter(c))
+                return new Token(getIdentifierString(), TokenType.IDENTIFIER);
+
+            if(IsValidSymbol(c))
+                return new Token(getSymbolString(), TokenType.SYMBOL);
             return null;
         }
 
-        private string getNumberToken()
+        private string getSymbolString()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private static  List<char> validSymbols = new List<char>{'<','>','=','+','-','*','\\','/'};
+        private bool IsValidSymbol(char c)
+        {
+            return validSymbols.Contains(c);
+        }
+
+        private string getIdentifierString()
+        {
+            var ident = string.Empty;
+            while (char.IsLetter(lookNextChar()))
+                ident += getNextChar();
+            return ident;
+        }
+
+        private string getNumberString()
         {
             var number = string.Empty;
             number += getPositiveNaturalNumber();
@@ -73,7 +98,7 @@ namespace MacroPLC
             return num;
         }
 
-        private string getWhiteToken()
+        private string getWhiteString()
         {
             var whiteStr = string.Empty;
             var c = lookNextChar();

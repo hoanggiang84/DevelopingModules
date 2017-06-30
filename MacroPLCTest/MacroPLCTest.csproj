@@ -58,9 +58,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LexicalScanner\NotEmptyStringLexicalScannerTest.cs" />
     <Compile Include="MacroCompilerTest.cs" />
-    <Compile Include="MacroLexicalScanner.cs" />
-    <Compile Include="SourceReaderTest.cs" />
+    <Compile Include="LexicalScanner\MacroLexicalScanner.cs" />
+    <Compile Include="SourceReader\SourceReaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Specification.cs" />
   </ItemGroup>
