@@ -56,6 +56,13 @@
   <ItemGroup>
     <Compile Include="MacroCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourceReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\LadderMonitor\UtilitiesVS2008WinCE\UtilitiesVS2008WinCE.csproj">
+      <Project>{73B16133-86BB-4062-98FE-B1C9F8B9AF04}</Project>
+      <Name>UtilitiesVS2008WinCE</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

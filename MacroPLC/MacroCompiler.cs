@@ -8,9 +8,5 @@
             this.source = source;
         }
 
-        public string CompileNextLine()
-        {
-            return string.Empty;
-        }
     }
 }
