@@ -1,5 +1,0 @@
-D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\MacroCompiler_current\MacroTextReader\bin\Debug\MacroTextReader.dll
-D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\MacroCompiler_current\MacroTextReader\bin\Debug\MacroTextReader.pdb
-D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\MacroCompiler_current\MacroTextReader\obj\Debug\ResolveAssemblyReference.cache
-D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\MacroCompiler_current\MacroTextReader\obj\Debug\MacroTextReader.dll
-D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\MacroCompiler_current\MacroTextReader\obj\Debug\MacroTextReader.pdb
