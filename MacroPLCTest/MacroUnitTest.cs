@@ -3,9 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MacroPLC
+namespace MacroPLCTest
 {
-    public class Class1
+    public class MacroUnitTest
     {
     }
 }

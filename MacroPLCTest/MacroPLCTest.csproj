@@ -4,16 +4,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AFAE4D7B-9567-4588-ACE9-54A6C3621274}</ProjectGuid>
+    <ProjectGuid>{88AFC55C-342F-4332-B489-E80A77E0F6C2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MacroPLC</RootNamespace>
-    <AssemblyName>MacroPLC</AssemblyName>
+    <RootNamespace>MacroPLCTest</RootNamespace>
+    <AssemblyName>MacroPLCTest</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
     <PlatformID>445d530d-10d0-4ec5-b948-e9a78483463a</PlatformID>
     <OSVersion>7.0</OSVersion>
-    <DeployDirSuffix>MacroPLC</DeployDirSuffix>
+    <DeployDirSuffix>MacroPLCTest</DeployDirSuffix>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <NativePlatformName>Toradex_CE700</NativePlatformName>
     <FormFactorID>
@@ -54,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MacroCompiler.cs" />
+    <Compile Include="MacroUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
