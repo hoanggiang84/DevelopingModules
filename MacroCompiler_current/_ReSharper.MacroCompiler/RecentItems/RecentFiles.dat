@@ -1,0 +1,66 @@
+﻿<RecentFiles>
+  <RecentFiles>
+    <File id="CD77E0F8-6C5E-46A4-9B61-11F4A3193BEA/f:HPType.cs" caret="2271" fromTop="34" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/d:EvaluateClasses/f:TermEvaluate.cs" caret="1377" fromTop="43" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:TermEvaluate.cs" caret="2528" fromTop="73" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestExpressions.cs" caret="2440" fromTop="0" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:ArithmeticEvaluate.cs" caret="0" fromTop="0" />
+    <File id="7004F092-0C59-4590-96EB-79FF363B4C65/f:Token.cs" caret="152" fromTop="7" />
+    <File id="7004F092-0C59-4590-96EB-79FF363B4C65/f:TokenManager.cs" caret="746" fromTop="7" />
+    <File id="899BFC43-E16D-41E8-A294-F993DA76FE78/f:VariableDB.cs" caret="6644" fromTop="16" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:IdentifierEvaluate.cs" caret="663" fromTop="23" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:NOTFactor.cs" caret="0" fromTop="0" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/f:MathExpression.cs" caret="6014" fromTop="17" />
+    <File id="2F385AA8-32E4-40E2-8D4E-D93F2DB6ADF8/f:HPFUNC.cs" caret="4026" fromTop="34" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/d:EvaluateClasses/f:IdentifierEvaluate.cs" caret="0" fromTop="0" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/f:ArithmeticEvaluate.cs" caret="699" fromTop="20" />
+    <File id="EFBB07D5-5CE4-42E3-BD93-F830BF665510/f:GCodeValidate.cs" caret="5419" fromTop="15" />
+    <File id="EFBB07D5-5CE4-42E3-BD93-F830BF665510/f:GCodeSatus.cs" caret="27" fromTop="0" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestGCodeValidate.cs" caret="167" fromTop="8" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/d:Statements/f:Assignment.cs" caret="614" fromTop="14" />
+    <File id="7004F092-0C59-4590-96EB-79FF363B4C65/f:LexicalScanner.cs" caret="4801" fromTop="20" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/d:Statements/f:GCodeStatement.cs" caret="2084" fromTop="41" />
+    <File id="2263E1F2-5F11-43C7-90DE-96C9CF6FC56E/f:mainForm.cs" caret="392" fromTop="0" />
+    <File id="73B16133-86BB-4062-98FE-B1C9F8B9AF04/f:StringExtensions.cs" caret="184" fromTop="7" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/f:MacroCompiler.cs" caret="0" fromTop="0" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/f:Task.cs" caret="460" fromTop="15" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestMacroFunction.cs" caret="1456" fromTop="19" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UniTestLexcialScanner.cs" caret="560" fromTop="7" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestHPType.cs" caret="780" fromTop="7" />
+    <File id="7835E198-0952-49BF-8D40-A55C22C042AF/f:MacroReader.cs" caret="164" fromTop="9" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestMacroCompiler.cs" caret="0" fromTop="0" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/d:Statements/f:MacroProgram.cs" caret="2442" fromTop="0" />
+  </RecentFiles>
+  <RecentEdits>
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:XORTerm.cs" caret="227" fromTop="7" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/d:EvaluateClasses/f:NotFactorEvaluate.cs" caret="54" fromTop="2" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/d:EvaluateClasses/f:LogicTermEvaluate.cs" caret="89" fromTop="4" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/d:EvaluateClasses/f:LogicExpressionEvaluate.cs" caret="98" fromTop="4" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:ORTerm.cs" caret="707" fromTop="24" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:ANDTerm.cs" caret="703" fromTop="18" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:NOTFactor.cs" caret="1298" fromTop="32" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:BoolLiteral.cs" caret="421" fromTop="18" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:RelationEvaluate.cs" caret="1672" fromTop="26" />
+    <File id="CD77E0F8-6C5E-46A4-9B61-11F4A3193BEA/f:HPType.cs" caret="2271" fromTop="34" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:ArithmeticEvaluate.cs" caret="48" fromTop="0" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:TermEvaluate.cs" caret="2528" fromTop="28" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/f:MacroCompiler.cs" caret="1019" fromTop="34" />
+    <File id="2263E1F2-5F11-43C7-90DE-96C9CF6FC56E/f:mainForm.cs" caret="806" fromTop="26" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/d:Statements/f:GCodeStatement.cs" caret="2304" fromTop="24" />
+    <File id="7004F092-0C59-4590-96EB-79FF363B4C65/f:LexicalScanner.cs" caret="4938" fromTop="24" />
+    <File id="EFBB07D5-5CE4-42E3-BD93-F830BF665510/f:GCodeSatus.cs" caret="27" fromTop="0" />
+    <File id="EFBB07D5-5CE4-42E3-BD93-F830BF665510/f:GCodeValidate.cs" caret="157" fromTop="6" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestGCodeValidate.cs" caret="503" fromTop="19" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/f:ArithmeticEvaluate.cs" caret="699" fromTop="20" />
+    <File id="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC/d:EvaluateClasses/f:IdentifierEvaluate.cs" caret="0" fromTop="0" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestMacroFunction.cs" caret="2073" fromTop="31" />
+    <File id="7EA55FA4-E221-440F-86DE-1A844268B657/d:Statements/f:MacroProgram.cs" caret="1473" fromTop="16" />
+    <File id="2F385AA8-32E4-40E2-8D4E-D93F2DB6ADF8/f:HPFUNC.cs" caret="4026" fromTop="19" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/d:Evaluates/f:IdentifierEvaluate.cs" caret="738" fromTop="24" />
+    <File id="899BFC43-E16D-41E8-A294-F993DA76FE78/f:VariableDB.cs" caret="6644" fromTop="11" />
+    <File id="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2/f:MathExpression.cs" caret="6014" fromTop="17" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestExpressions.cs" caret="220" fromTop="12" />
+    <File id="F0650E7A-493E-43C7-847C-969C904BBF5F/f:UnitTestMacroCompiler.cs" caret="10258" fromTop="36" />
+    <File id="7835E198-0952-49BF-8D40-A55C22C042AF/f:MacroReader.cs" caret="152" fromTop="8" />
+  </RecentEdits>
+</RecentFiles>

@@ -1,0 +1,114 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7EA55FA4-E221-440F-86DE-1A844268B657}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MacroCompiler</RootNamespace>
+    <AssemblyName>MacroCompiler</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>445d530d-10d0-4ec5-b948-e9a78483463a</PlatformID>
+    <OSVersion>7.00</OSVersion>
+    <DeployDirSuffix>MacroCompiler</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Toradex_CE700</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enums\ExecuteTask.cs" />
+    <Compile Include="Interfaces\IStatement.cs" />
+    <Compile Include="PrivateFunctions.cs" />
+    <Compile Include="MacroCompiler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statements\Assignment.cs" />
+    <Compile Include="Statements\GCodeStatement.cs" />
+    <Compile Include="Statements\MacroProgram.cs" />
+    <Compile Include="Statements\Statement.cs" />
+    <Compile Include="Statements\StatementType.cs" />
+    <Compile Include="Task.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HPGCodeValidation\HPGCodeValidation.csproj">
+      <Project>{EFBB07D5-5CE4-42E3-BD93-F830BF665510}</Project>
+      <Name>HPGCodeValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HPMacroFunctions\HPMacroFunctions.csproj">
+      <Project>{2F385AA8-32E4-40E2-8D4E-D93F2DB6ADF8}</Project>
+      <Name>HPMacroFunctions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HPMathExpression\HPMathExpression.csproj">
+      <Project>{A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2}</Project>
+      <Name>HPMathExpression</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HPTypes\HPTypes.csproj">
+      <Project>{CD77E0F8-6C5E-46A4-9B61-11F4A3193BEA}</Project>
+      <Name>HPTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\LoadIdentifierInterface\LoadIdentifierInterface.csproj">
+      <Project>{A408887C-BDE1-45D2-B9FC-8759FF1D46A5}</Project>
+      <Name>LoadIdentifierInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MacroKeywords\HPMacroKeywords\HPMacroComponents.csproj">
+      <Project>{7004F092-0C59-4590-96EB-79FF363B4C65}</Project>
+      <Name>HPMacroComponents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MacroVariableDB\MacroVariableDB.csproj">
+      <Project>{899BFC43-E16D-41E8-A294-F993DA76FE78}</Project>
+      <Name>MacroVariableDB</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

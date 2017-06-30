@@ -1,0 +1,16 @@
+<Modules>
+  <Module PersistentId="7EA55FA4-E221-440F-86DE-1A844268B657" ModuleId="MacroCompiler" />
+  <Module PersistentId="7004F092-0C59-4590-96EB-79FF363B4C65" ModuleId="HPMacroKeywords" />
+  <Module PersistentId="253D6FE4-1F84-486F-99FA-0D52B0D2666E" ModuleId="HPMacroCompilerComponents" />
+  <Module PersistentId="F0650E7A-493E-43C7-847C-969C904BBF5F" ModuleId="UnitTestMacroCompiler" />
+  <Module PersistentId="2263E1F2-5F11-43C7-90DE-96C9CF6FC56E" ModuleId="MacroTestProgram" />
+  <Module PersistentId="73B16133-86BB-4062-98FE-B1C9F8B9AF04" ModuleId="UtilitiesVS2008WinCE" />
+  <Module PersistentId="4A78DEF9-7E11-48B0-A71A-7CF45F0E26FC" ModuleId="HPArithmetic" />
+  <Module PersistentId="2F385AA8-32E4-40E2-8D4E-D93F2DB6ADF8" ModuleId="HPMacroFunctions" />
+  <Module PersistentId="CD77E0F8-6C5E-46A4-9B61-11F4A3193BEA" ModuleId="HPTypes" />
+  <Module PersistentId="899BFC43-E16D-41E8-A294-F993DA76FE78" ModuleId="MacroVariableDB" />
+  <Module PersistentId="A408887C-BDE1-45D2-B9FC-8759FF1D46A5" ModuleId="LoadIdentifierInterface" />
+  <Module PersistentId="A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2" ModuleId="HPMathExpression" />
+  <Module PersistentId="EFBB07D5-5CE4-42E3-BD93-F830BF665510" ModuleId="HPGCodeValidation" />
+  <Module PersistentId="7835E198-0952-49BF-8D40-A55C22C042AF" ModuleId="MacroTextReader" />
+</Modules>
