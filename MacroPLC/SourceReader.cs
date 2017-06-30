@@ -8,7 +8,6 @@ namespace MacroPLC
         private string source;
         public SourceReader(string source)
         {
-            CurrentIndex = 0;
             Source = source;
         }
 
@@ -20,6 +19,7 @@ namespace MacroPLC
                 if (value.IsNullOrWhite())
                     throw new InvalidSourceCodeException("Source is null or only white space");
                 source = value;
+                ResetIndex();
             }
         }
 

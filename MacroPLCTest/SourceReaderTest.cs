@@ -3,8 +3,7 @@ using NUnit.Framework;
 
 namespace MacroPLCTest
 {
-    [TestFixture]
-    public class SourceReaderTest
+    public class SourceReaderTest:Specification
     {
         [Test]
         public void InvalidSourceTest()

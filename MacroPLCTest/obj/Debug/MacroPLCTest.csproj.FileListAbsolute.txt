@@ -8,3 +8,7 @@ D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\Developing
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\MacroPLC.pdb
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\UtilitiesVS2008WinCE.dll
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\UtilitiesVS2008WinCE.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPMacroKeywords.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPMacroCompilerComponents.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPMacroKeywords.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPMacroCompilerComponents.pdb

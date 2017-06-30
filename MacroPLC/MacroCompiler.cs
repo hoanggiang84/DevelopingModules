@@ -8,5 +8,10 @@
             this.source = source;
         }
 
+        public void CompileStep()
+        {
+            
+        }
+
     }
 }

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MacroCompiler.cs" />
+    <Compile Include="MacroLexicalScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceReader.cs" />
   </ItemGroup>
@@ -62,6 +63,10 @@
     <ProjectReference Include="..\..\..\LadderMonitor\UtilitiesVS2008WinCE\UtilitiesVS2008WinCE.csproj">
       <Project>{73B16133-86BB-4062-98FE-B1C9F8B9AF04}</Project>
       <Name>UtilitiesVS2008WinCE</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MacroKeywords\HPMacroKeywords\HPMacroComponents.csproj">
+      <Project>{7004F092-0C59-4590-96EB-79FF363B4C65}</Project>
+      <Name>HPMacroComponents</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
