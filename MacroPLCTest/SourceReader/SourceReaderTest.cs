@@ -75,7 +75,7 @@ namespace MacroPLCTest
         public void ReadSource_withExpectedResults()
         {
             var whiteStr = " \t \r";
-            var sourceLines = new string[]
+            var sourceLines = new []
                              {
                                  "x1=2;",
                                  whiteStr,

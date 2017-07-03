@@ -31,9 +31,7 @@ namespace MacroPLC
         {
             get
             {
-                if (currentIndex >= source.Length)
-                    return INVALID_INDEX;
-                return currentIndex;
+                return currentIndex >= source.Length ? INVALID_INDEX : currentIndex;
             }
         }
 
