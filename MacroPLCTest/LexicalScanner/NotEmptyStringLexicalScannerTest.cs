@@ -1,6 +1,7 @@
-﻿using HPMacroComponents;
-
+﻿using HPMacroCommon;
+using HPMacroComponents;
 using NUnit.Framework;
+using System;
 
 namespace MacroPLCTest
 {
@@ -70,7 +71,8 @@ namespace MacroPLCTest
             source = ".11";
             CreateScanner();
             var token = lexScanner.ScanNext();
-            Assert.IsNull(token);
+            Assert.AreEqual(TokenType.UNDEFINED, token.Type);
+            Assert.AreEqual(".", token.Text);
         }
 
         [Test]
@@ -96,13 +98,46 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void ScanSymbolToken()
+        public void ScanLessSymbolToken()
         {
             source = "<";
             CreateScanner();
             var token = lexScanner.ScanNext();
             Assert.AreEqual(source, token.Text);
             Assert.AreEqual(TokenType.SYMBOL, token.Type);
+        }
+
+        [Test]
+        public void ScanRandomSymbolToken()
+        {
+            var numberOfValidSymbols = MacroKeywords.ValidSymbols.Count;
+            var index = new Random().Next(numberOfValidSymbols);
+
+            source = MacroKeywords.ValidSymbols[index];
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(source, token.Text);
+            Assert.AreEqual(TokenType.SYMBOL, token.Type);
+        }
+
+        [Test]
+        public void ScanUndenfiedSymbolToken()
+        {
+            source = "~_'?";
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(source, token.Text);
+            Assert.AreEqual(TokenType.UNDEFINED, token.Type);
+        }
+
+        [Test]
+        public void ScanUndenfiedLetterToken()
+        {
+            source = "à";
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(source, token.Text);
+            Assert.AreEqual(TokenType.UNDEFINED, token.Type);
         }
     }
 }

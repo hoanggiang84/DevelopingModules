@@ -64,6 +64,10 @@
       <Project>{73B16133-86BB-4062-98FE-B1C9F8B9AF04}</Project>
       <Name>UtilitiesVS2008WinCE</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\MacroComponents\HPMacroCompilerComponents\HPMacroCommon.csproj">
+      <Project>{253D6FE4-1F84-486F-99FA-0D52B0D2666E}</Project>
+      <Name>HPMacroCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\MacroKeywords\HPMacroKeywords\HPMacroComponents.csproj">
       <Project>{7004F092-0C59-4590-96EB-79FF363B4C65}</Project>
       <Name>HPMacroComponents</Name>

@@ -1,5 +1,7 @@
-﻿using HPMacroComponents;
-using System.Collections.Generic;
+﻿using System.Globalization;
+using System.Linq;
+using HPMacroCommon;
+using HPMacroComponents;
 
 namespace MacroPLC
 {
@@ -48,23 +50,92 @@ namespace MacroPLC
             if(char.IsDigit(c))
                 return new Token(getNumberString(), TokenType.NUMBER);
             
-            if(char.IsLetter(c))
+            if(IsValidIdentifierChar(c))
                 return new Token(getIdentifierString(), TokenType.IDENTIFIER);
 
             if(IsValidSymbol(c))
                 return new Token(getSymbolString(), TokenType.SYMBOL);
-            return null;
+
+            return getUndefinedString();
+        }
+
+        private static bool IsValidIdentifierChar(char c)
+        {
+            return char.IsLetter(c) && (c < 128);
+        }
+
+        private Token getUndefinedString()
+        {
+            var undefined = string.Empty;
+            while (IsUndefinedChar(lookNextChar()) && currentIndex < source.Length)
+            {
+                undefined += getNextChar();
+            }
+            return new Token(undefined, TokenType.UNDEFINED);
+        }
+
+        private bool IsUndefinedChar(char c)
+        {
+            return !(char.IsWhiteSpace(c) | char.IsDigit(c) | IsValidIdentifierChar(c) | IsValidSymbol(c));
         }
 
         private string getSymbolString()
         {
-            throw new System.NotImplementedException();
+            var c = getNextChar();
+            var symbol = string.Empty;
+            symbol += c;
+            switch (c)
+            {
+                case '<':
+                    if (lookNextChar() == '=')
+                    {
+                        getNextChar();
+                        return "<=";
+                    }
+                    if (lookNextChar() == '>')
+                    {
+                        getNextChar();
+                        return "<>";
+                    }
+                    break;
+
+                case '>':
+                    if (lookNextChar() == '=')
+                    {
+                        getNextChar();
+                        return ">=";
+                    }
+                    break;
+
+                case '/':
+                    if (lookNextChar() == '*')
+                    {
+                        getNextChar();
+                        return "/*";
+                    }
+                    if (lookNextChar() == '/')
+                    {
+                        getNextChar();
+                        return "//";
+                    }
+                    break;
+
+                case '*':
+                    if (lookNextChar() == '/')
+                    {
+                        getNextChar();
+                        return "*/";
+                    }
+                    break;
+            }
+
+            return symbol;
         }
 
-        private static  List<char> validSymbols = new List<char>{'<','>','=','+','-','*','\\','/'};
         private bool IsValidSymbol(char c)
         {
-            return validSymbols.Contains(c);
+            return MacroKeywords.ValidSymbols
+                .Any(word => word.StartsWith(c.ToString(CultureInfo.InvariantCulture)));
         }
 
         private string getIdentifierString()
