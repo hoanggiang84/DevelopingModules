@@ -4,16 +4,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{88AFC55C-342F-4332-B489-E80A77E0F6C2}</ProjectGuid>
+    <ProjectGuid>{413A7DB0-3B8C-4F51-B504-F394FC8F55B9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MacroPLCTest</RootNamespace>
-    <AssemblyName>MacroPLCTest</AssemblyName>
+    <RootNamespace>MacroLexScn</RootNamespace>
+    <AssemblyName>MacroLexScn</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
     <PlatformID>445d530d-10d0-4ec5-b948-e9a78483463a</PlatformID>
     <OSVersion>7.0</OSVersion>
-    <DeployDirSuffix>MacroPLCTest</DeployDirSuffix>
+    <DeployDirSuffix>MacroLexScn</DeployDirSuffix>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <NativePlatformName>Toradex_CE700</NativePlatformName>
     <FormFactorID>
@@ -46,10 +46,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
-    <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\NUnit 2.6\bin\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,31 +54,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LexicalScanner\NotEmptyStringLexicalScannerTest.cs" />
-    <Compile Include="MacroCompiler\MacroCompilerTest.cs" />
-    <Compile Include="LexicalScanner\MacroLexicalScanner.cs" />
-    <Compile Include="SourceNavigation\SourceManagerTest.cs" />
-    <Compile Include="SourceNavigation\SourceReaderTest.cs" />
+    <Compile Include="MacroLexicalScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Specification.cs" />
-    <Compile Include="LexicalScanner\TokenManagerTest.cs" />
+    <Compile Include="Token.cs" />
+    <Compile Include="TokenManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\LadderMonitor\UtilitiesVS2008WinCE\UtilitiesVS2008WinCE.csproj">
-      <Project>{73B16133-86BB-4062-98FE-B1C9F8B9AF04}</Project>
-      <Name>UtilitiesVS2008WinCE</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\MacroComponents\HPMacroCompilerComponents\HPMacroCommon.csproj">
       <Project>{253D6FE4-1F84-486F-99FA-0D52B0D2666E}</Project>
       <Name>HPMacroCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MacroLexScn\MacroLexScn.csproj">
-      <Project>{413A7DB0-3B8C-4F51-B504-F394FC8F55B9}</Project>
-      <Name>MacroLexScn</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MacroPLC\MacroPLC.csproj">
-      <Project>{AFAE4D7B-9567-4588-ACE9-54A6C3621274}</Project>
-      <Name>MacroPLC</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

@@ -1,4 +1,5 @@
-﻿using HPMacroComponents;
+﻿using MacroLexScn;
+using System;
 using MacroPLC;
 using NUnit.Framework;
 
@@ -17,8 +18,8 @@ namespace MacroPLCTest
         [Test]
         public void ScanNullorEmptyString()
         {
-            Assert.Throws<InvalidSourceCodeException>(() => new MacroLexicalScanner(null));
-            Assert.Throws<InvalidSourceCodeException>(() => new MacroLexicalScanner(string.Empty));
+            Assert.Throws<ArgumentException>(() => new MacroLexicalScanner(null));
+            Assert.Throws<ArgumentException>(() => new MacroLexicalScanner(string.Empty));
         }
 
     }

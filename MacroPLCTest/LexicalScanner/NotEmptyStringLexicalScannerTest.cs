@@ -1,5 +1,5 @@
 ﻿using HPMacroCommon;
-using HPMacroComponents;
+using MacroLexScn;
 using NUnit.Framework;
 using System;
 
@@ -23,7 +23,7 @@ namespace MacroPLCTest
             CreateScanner();
             var token = lexScanner.ScanNext();
             token = lexScanner.ScanNext();
-            Assert.IsNull(token);
+            Assert.AreEqual(TokenType.END, token.Type);
         }
 
         [Test]
@@ -49,9 +49,6 @@ namespace MacroPLCTest
             token = lexScanner.ScanNext();
             Assert.AreEqual(10, int.Parse(token.Text));
             Assert.AreEqual(TokenType.NUMBER, token.Type);
-
-            token = lexScanner.ScanNext();
-            Assert.IsNull(token);
         }
 
         [Test]
@@ -76,9 +73,57 @@ namespace MacroPLCTest
         }
 
         [Test]
+        public void ScanLocalVariable()
+        {
+            source = "#123";
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(TokenType.LOCAL_VAR, token.Type);
+            Assert.AreEqual("#123", token.Text);
+        }
+
+        [Test]
+        public void ScanStartCharOfLocalVariable()
+        {
+            source = "#[2]";
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(TokenType.LOCAL_VAR, token.Type);
+            Assert.AreEqual("#", token.Text);
+
+            token = lexScanner.ScanNext();
+            Assert.AreEqual(TokenType.SYMBOL, token.Type);
+            Assert.AreEqual("[", token.Text);
+        }
+
+        [Test]
+        public void ScanGlobalVariable()
+        {
+            source = "@123";
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(TokenType.GLOBAL_VAR, token.Type);
+            Assert.AreEqual("@123", token.Text);
+        }
+
+        [Test]
+        public void ScanStartCharOfGlobalVariable()
+        {
+            source = "@[2]";
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(TokenType.GLOBAL_VAR, token.Type);
+            Assert.AreEqual("@", token.Text);
+
+            token = lexScanner.ScanNext();
+            Assert.AreEqual(TokenType.SYMBOL, token.Type);
+            Assert.AreEqual("[", token.Text);
+        }
+
+        [Test]
         public void ScanIdentifierToken()
         {
-            source = "fegeg";
+            source = "anIdent";
             CreateScanner();
             var token = lexScanner.ScanNext();
             Assert.AreEqual(source, token.Text);
@@ -86,15 +131,12 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void ScanIdentifierAndThenNumberToken()
+        public void ScanIdentifierWithNumberToken()
         {
-            source = "fegeg2123";
+            source = "with12ident";
             CreateScanner();
             var token = lexScanner.ScanNext();
             Assert.AreEqual(TokenType.IDENTIFIER, token.Type);
-            
-            token = lexScanner.ScanNext();
-            Assert.AreEqual(TokenType.NUMBER, token.Type);
         }
 
         [Test]

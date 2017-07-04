@@ -1,0 +1,7 @@
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroLexScn\bin\Debug\MacroLexScn.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroLexScn\bin\Debug\MacroLexScn.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroLexScn\bin\Debug\HPMacroCompilerComponents.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroLexScn\bin\Debug\HPMacroCompilerComponents.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroLexScn\obj\Debug\ResolveAssemblyReference.cache
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroLexScn\obj\Debug\MacroLexScn.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroLexScn\obj\Debug\MacroLexScn.pdb
