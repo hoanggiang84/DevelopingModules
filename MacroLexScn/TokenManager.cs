@@ -6,6 +6,8 @@ namespace MacroLexScn
 {
     public class TokenManager
     {
+        public static readonly Token END_TOKEN = new Token(string.Empty,TokenType.END);
+
         public TokenManager(IEnumerable<Token> tokens)
         {
             this.tokens.AddRange(tokens);
@@ -17,6 +19,7 @@ namespace MacroLexScn
 
         public Token GetNextToken()
         {
+            IgnoreWhiteSpace();
             if (CurrentIndex < tokens.Count)
                 return tokens[CurrentIndex++];
             return GetLastToken();
@@ -24,12 +27,26 @@ namespace MacroLexScn
 
         public Token LookNextToken()
         {
+            IgnoreWhiteSpace();
             if (CurrentIndex < tokens.Count)
-            {
                 return tokens[CurrentIndex];
-
-            }
             return GetLastToken();
+        }
+
+        private void IgnoreWhiteSpace()
+        {
+            if(CurrentIndex >= tokens.Count)
+                return;
+
+            var curToken = tokens[CurrentIndex];
+            while (CurrentIndex < tokens.Count && curToken.Type == TokenType.WHITE_SPACE)
+            {
+                Match(curToken.Text);
+                if (CurrentIndex >= tokens.Count)
+                    curToken = END_TOKEN;
+                else
+                    curToken = tokens[CurrentIndex];
+            }
         }
 
         private Token GetLastToken()
@@ -37,12 +54,15 @@ namespace MacroLexScn
             if (tokens.Count <= 0)
                 throw new Exception("Empty tokens");
 
-            return new Token(string.Empty, TokenType.END); // Also to indicate end of source
+            return END_TOKEN; // Also to indicate end of source
         }
 
+        /// <summary>
+        /// Match current token string with input. Increase current index if succeeded.
+        /// </summary>
         public Token Match(string str)
         {
-            var nextToken = GetNextToken();
+            var nextToken = tokens[CurrentIndex++];
             if (nextToken.Text != str)
                 throw new Exception(string.Format("Expected: '{0}'. But was: '{1}'", str, nextToken.Text));
             return nextToken;
