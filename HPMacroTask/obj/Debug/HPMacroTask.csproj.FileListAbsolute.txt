@@ -1,0 +1,9 @@
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\bin\Debug\HPMacroTask.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\bin\Debug\HPMacroTask.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\bin\Debug\MacroLexScn.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\bin\Debug\HPMacroCompilerComponents.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\bin\Debug\HPMacroCompilerComponents.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\bin\Debug\MacroLexScn.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\obj\Debug\ResolveAssemblyReference.cache
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\obj\Debug\HPMacroTask.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPMacroTask\obj\Debug\HPMacroTask.pdb

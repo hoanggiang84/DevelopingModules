@@ -10,6 +10,12 @@
             Text = text;
             Type = type;
         }
+
+        public Token(Token tkn)
+        {
+            Text = tkn.Text;
+            Type = tkn.Type;
+        }
     }
 
     public enum TokenType
