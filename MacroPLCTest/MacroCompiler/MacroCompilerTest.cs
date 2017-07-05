@@ -7,6 +7,12 @@ namespace MacroPLCTest
 {
     public class MacroCompilerTest:Specification
     {
+        [SetUp]
+        public void Setup()
+        {
+            VariableDB.InitializeVariables();
+        }
+
         [Test]
         public void StepCompileAssignment()
         {

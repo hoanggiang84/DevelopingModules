@@ -30,13 +30,13 @@ namespace MacroPLC
 
         public void Execute()
         {
-            var value = MathExpression.Create(expressionTokens).Evaluate();
-            VariableDB.SetVariable(variableName, value);
+            Step();
         }
 
         public void Step()
         {
-            Execute();
+            var value = MathExpression.Create(expressionTokens).Evaluate();
+            VariableDB.SetVariable(variableName, value);
         }
 
         public string VariableName { get { return variableName; } }
