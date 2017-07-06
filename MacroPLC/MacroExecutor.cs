@@ -6,18 +6,32 @@ namespace MacroPLC
 {
     public class MacroExecutor
     {
-        public VariableRepository Variables = new VariableRepository();
         private List<Task> compiledTasks;
+        private const int INVALID_LINE_NUMBER = -1;
+
+        public VariableRepository Variables { get; private set; }
 
         public MacroExecutor(List<Task> compiledTasks)
         {
             this.compiledTasks = compiledTasks;
+            Variables = new VariableRepository();
             Variables.InitializeVariables();
         }
 
         public void Execute()
         {
-            
+            ResetExecute();
+            var lineIndex = 0;
+            while (lineIndex != INVALID_LINE_NUMBER)
+            {
+                lineIndex = StepExecute();
+            }
+        }
+
+        private void ResetExecute()
+        {
+            taskIndex = 0;
+            Variables.InitializeVariables();
         }
 
         private int taskIndex;
@@ -36,7 +50,7 @@ namespace MacroPLC
                         return lineNumber;
                 }
             }
-            return -1;
+            return INVALID_LINE_NUMBER;
         }
     }
 }

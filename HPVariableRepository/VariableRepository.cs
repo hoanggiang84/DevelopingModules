@@ -135,7 +135,6 @@ namespace HPVariableRepository
             {
                 throw new Exception(string.Format("Cannot assign variable '{0}'", name), ex);
             }
-
         }
 
         private static bool IsIdentifier(string name)

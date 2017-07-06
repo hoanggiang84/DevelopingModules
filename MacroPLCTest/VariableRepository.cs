@@ -49,7 +49,6 @@ namespace MacroPLCTest
             VarDB.SetVariable(varName1,HPType.CreateType("10"));
             variableValue = VarDB.LoadVariable(varName1).Literal;
             Assert.AreEqual(10, int.Parse(variableValue));
-         
         }
 
         [Test]

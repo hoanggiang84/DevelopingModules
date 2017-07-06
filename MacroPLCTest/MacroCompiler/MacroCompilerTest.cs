@@ -1,5 +1,4 @@
 ﻿using MacroPLC;
-using MacroVariableDB;
 using NUnit.Framework;
 using System;
 
