@@ -48,6 +48,9 @@ namespace MacroPLC
                     case TaskType.ASSIGNMENT:
                         new Assignment(curTask.Tokens, Variables).Execute();
                         return lineNumber;
+                    case TaskType.GCODE:
+                        new GCodeStatement(curTask.Tokens,Variables).Execute();
+                        return lineNumber;
                 }
             }
             return INVALID_LINE_NUMBER;

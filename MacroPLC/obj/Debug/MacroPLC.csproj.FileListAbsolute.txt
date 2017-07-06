@@ -23,3 +23,5 @@ D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\Developing
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLC\obj\Debug\MacroPLC.pdb
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLC\bin\Debug\HPVariableRepository.dll
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLC\bin\Debug\HPVariableRepository.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLC\bin\Debug\HPGCodeValidation.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLC\bin\Debug\HPGCodeValidation.pdb

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using HPGCodeValidation;
 using HPMacroCommon;
 using HPMacroTask;
-using HPVariableRepository;
 using MacroLexScn;
 using System.Linq;
 
@@ -34,10 +34,14 @@ namespace MacroPLC
                     token = lexScanner.ScanNext();
                 }
 
-                if(lineTokens.First().Type == TokenType.GLOBAL_VAR
+                if(GCodeValidate.ValidateGCodeCommand(lineTokens.First().Text))
+                {
+                    CreateGCodeStatement(lineTokens,lineNum);
+                }
+                else if(lineTokens.First().Type == TokenType.GLOBAL_VAR
                     || lineTokens.First().Type == TokenType.LOCAL_VAR)
                 {
-                    CreateAssignment(lineTokens,lineNum);
+                    CreateAssignmentStatement(lineTokens,lineNum);
                 }
                 
               
@@ -45,11 +49,24 @@ namespace MacroPLC
             }
         }
 
-        private void CreateAssignment(List<Token> tokens, int lineNumber )
+        private static void validateEndStatement(List<Token> tokens, int lineNumber)
         {
-            if(tokens.Last().Text != MacroKeywords.END_STATEMENT)  
+            if (tokens.Last().Text != MacroKeywords.END_STATEMENT)
                 throw new Exception(string.Format("Expected '{0}' at line {1}", MacroKeywords.END_STATEMENT, lineNumber));
-            var assignTask = new Task(TaskType.ASSIGNMENT, tokens);
+        }
+
+        private void CreateGCodeStatement(List<Token> tokens, int lineNumber)
+        {
+            validateEndStatement(tokens, lineNumber);
+            var gCodeTask = new Task(TaskType.GCODE, tokens.Take(tokens.Count - 1).ToList());
+            gCodeTask.SetLineNumber(lineNumber);
+            compiledTasks.Add(gCodeTask);
+        }
+
+        private void CreateAssignmentStatement(List<Token> tokens, int lineNumber )
+        {
+            validateEndStatement(tokens,lineNumber);
+            var assignTask = new Task(TaskType.ASSIGNMENT, tokens.Take(tokens.Count - 1).ToList());
             assignTask.SetLineNumber(lineNumber);
             compiledTasks.Add(assignTask);
         }

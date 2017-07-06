@@ -6,7 +6,7 @@ namespace MacroLexScn
 {
     public class TokenManager
     {
-        public static readonly Token END_TOKEN = new Token(string.Empty,TokenType.END);
+        public static readonly Token END_TOKEN = new Token(MacroKeywords.END, TokenType.END);
 
         public TokenManager(IEnumerable<Token> tokens)
         {

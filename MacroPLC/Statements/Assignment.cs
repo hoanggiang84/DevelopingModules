@@ -22,45 +22,63 @@ namespace MacroPLC
 
         private void GetInfo()
         {
-            variableName = tokenManager.GetNextToken().Text;
-            var nextToken = tokenManager.LookNextToken();
-            if(variableName == "#" || variableName == "@")
-            {
-                if(nextToken.Text == MacroKeywords.INDEX_OPEN)
-                {
-                    tokenManager.Match(MacroKeywords.INDEX_OPEN);
-                    nextToken = tokenManager.LookNextToken();
-                    indexTokens.Clear();
-                    while (nextToken.Text != MacroKeywords.INDEX_CLOSE)
-                    {
-                        if(nextToken.Type == TokenType.END)
-                            throw new Exception(string.Format("Expected '{0}'",MacroKeywords.INDEX_CLOSE));
-                        indexTokens.Add(tokenManager.GetNextToken());
-                        nextToken = tokenManager.LookNextToken();
-                    }
-                    tokenManager.Match(MacroKeywords.INDEX_CLOSE);
+            getVariableName();
 
-                    var index = MathExpression.Create(indexTokens).Evaluate();
-                    if(index.Type != VariableType.INT)
-                        throw new Exception("Index must be an integer");
+            Match(MacroKeywords.EQUAL);
 
-                    var indexVal = int.Parse(index.Literal);
-                    if(indexVal < 0)
-                        throw new Exception("Index must be non-negative");
+            getRightSideExpression();
+        }
 
-                    variableName += index.Literal;
-                }
-                else
-                {
-                    throw new Exception(string.Format("Expected '{0}'", MacroKeywords.INDEX_OPEN));
-                }
-            }
-
-            if (tokenManager.LookNextToken().Text == MacroKeywords.EQUAL)
-                tokenManager.Match(MacroKeywords.EQUAL);
-
+        private void getRightSideExpression()
+        {
             while (tokenManager.LookNextToken().Type != TokenType.END)
                 expressionTokens.Add(tokenManager.GetNextToken());
+        }
+
+        private void Match(string expectedString)
+        {
+            if (tokenManager.LookNextToken().Text == expectedString)
+                tokenManager.Match(expectedString);
+            else
+                throw new Exception(string.Format("Expected '{0}'", expectedString));
+        }
+
+        private void getVariableName()
+        {
+            var varToken = tokenManager.GetNextToken();
+            if(varToken.Type != TokenType.GLOBAL_VAR && varToken.Type != TokenType.LOCAL_VAR)
+                throw new Exception("Expected variable at the start of statement");
+
+            variableName = varToken.Text;
+            if (variableName != "#" && variableName != "@") return; // No indexer
+
+            // Assignment uses indexer #[i] or @[i]
+            var nextToken = tokenManager.LookNextToken();
+            if (nextToken.Text != MacroKeywords.INDEX_OPEN)
+                throw new Exception(string.Format("Expected '{0}'", MacroKeywords.INDEX_OPEN));
+            
+            tokenManager.Match(MacroKeywords.INDEX_OPEN);
+            nextToken = tokenManager.LookNextToken();
+            indexTokens.Clear();
+            while (nextToken.Text != MacroKeywords.INDEX_CLOSE)
+            {
+                if (nextToken.Type == TokenType.END)
+                    throw new Exception(string.Format("Expected '{0}'", MacroKeywords.INDEX_CLOSE));
+                indexTokens.Add(tokenManager.GetNextToken());
+                nextToken = tokenManager.LookNextToken();
+            }
+            tokenManager.Match(MacroKeywords.INDEX_CLOSE);
+
+            // Get index value
+            var index = MathExpression.Create(indexTokens).Evaluate();
+            if (index.Type != VariableType.INT)
+                throw new Exception("Index must be an integer");
+
+            var indexVal = int.Parse(index.Literal);
+            if (indexVal < 0)
+                throw new Exception("Index must be non-negative");
+
+            variableName += index.Literal;
         }
 
         private string variableName;

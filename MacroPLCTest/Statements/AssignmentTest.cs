@@ -20,6 +20,30 @@ namespace MacroPLCTest
         }
 
         [Test]
+        public void InvalidSyntaxNoValidVariable_ThrowException()
+        {   //x = 12.1
+            var tokens = new List<Token>
+                             {
+                                 new Token("x", TokenType.IDENTIFIER),
+                                 new Token("=",TokenType.SYMBOL),
+                                 new Token("12.1",TokenType.NUMBER)
+                             };
+            Assert.Throws<Exception>(() => new Assignment(tokens, varDB), "Invalid variable");
+        }
+
+        [Test]
+        public void InvalidSyntaxNoEqual_ThrowException()
+        {   //#1 = 12.1
+            var tokens = new List<Token>
+                             {
+                                 new Token("#1", TokenType.LOCAL_VAR),
+                                 new Token("-",TokenType.SYMBOL),
+                                 new Token("12.1",TokenType.NUMBER)
+                             };
+            Assert.Throws<Exception>(() => new Assignment(tokens, varDB), "Missing assign symbol");
+        }
+
+        [Test]
         public void VariableAssignment_VariableValueSet()
         {   // @10 = 12.1
             var whiteToken = new Token("  ", TokenType.WHITE_SPACE);
