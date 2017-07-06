@@ -24,3 +24,5 @@ D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\Developing
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\obj\Debug\ResolveAssemblyReference.cache
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\obj\Debug\MacroPLCTest.dll
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\obj\Debug\MacroPLCTest.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPVariableRepository.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPVariableRepository.pdb

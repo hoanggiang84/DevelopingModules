@@ -1,0 +1,9 @@
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\bin\Debug\HPVariableRepository.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\bin\Debug\HPVariableRepository.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\bin\Debug\HPMacroFunctions.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\bin\Debug\HPTypes.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\bin\Debug\HPMacroFunctions.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\bin\Debug\HPTypes.pdb
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\obj\Debug\ResolveAssemblyReference.cache
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\obj\Debug\HPVariableRepository.dll
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\HPVariableRepository\obj\Debug\HPVariableRepository.pdb
