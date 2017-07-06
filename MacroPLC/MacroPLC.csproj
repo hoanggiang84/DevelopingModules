@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MacroExecutor.cs" />
     <Compile Include="Statements\Assignment.cs" />
     <Compile Include="MacroCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +89,10 @@
     <ProjectReference Include="..\HPMacroTask\HPMacroTask.csproj">
       <Project>{215865B7-7B37-493A-9577-CAF6C1836BA9}</Project>
       <Name>HPMacroTask</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HPVariableRepository\HPVariableRepository.csproj">
+      <Project>{50ECF66B-0F3D-4571-8401-1296C53D3F7D}</Project>
+      <Name>HPVariableRepository</Name>
     </ProjectReference>
     <ProjectReference Include="..\MacroLexScn\HPMacroLexScn.csproj">
       <Project>{413A7DB0-3B8C-4F51-B504-F394FC8F55B9}</Project>

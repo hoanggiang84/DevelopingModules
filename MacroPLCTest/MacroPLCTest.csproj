@@ -86,6 +86,10 @@
       <Project>{899BFC43-E16D-41E8-A294-F993DA76FE78}</Project>
       <Name>MacroVariableDB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HPMacroTask\HPMacroTask.csproj">
+      <Project>{215865B7-7B37-493A-9577-CAF6C1836BA9}</Project>
+      <Name>HPMacroTask</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HPVariableRepository\HPVariableRepository.csproj">
       <Project>{50ECF66B-0F3D-4571-8401-1296C53D3F7D}</Project>
       <Name>HPVariableRepository</Name>

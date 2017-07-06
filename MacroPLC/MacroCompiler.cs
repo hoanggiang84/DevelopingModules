@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using HPMacroCommon;
 using HPMacroTask;
+using HPVariableRepository;
 using MacroLexScn;
 using System.Linq;
-using MacroVariableDB;
 
 namespace MacroPLC
 {
     public class MacroCompiler
     {
         private SourceManager sourceManager;
-        private List<Task> compiledTasks = new List<Task>();
+        public List<Task> compiledTasks { get; private set; }
         public MacroCompiler(string source)
         {
             sourceManager = new SourceManager(source);
-            VariableDB.InitializeVariables();
+            compiledTasks = new List<Task>();
         }
 
         public void Compile()
         {
+            compiledTasks.Clear();
             int lineNum;
             var lineContent = sourceManager.GetNextLine(out lineNum);
             while (lineContent != null)
@@ -52,26 +53,5 @@ namespace MacroPLC
             assignTask.SetLineNumber(lineNumber);
             compiledTasks.Add(assignTask);
         }
-
-        private int taskIndex;
-        public int StepExecute()
-        {
-            if (taskIndex < compiledTasks.Count)
-            {
-                var curTask = compiledTasks[taskIndex];
-                taskIndex++;
-
-                var lineNumber = curTask.LineNumber;
-                switch (curTask.Type)
-                {
-                    case TaskType.ASSIGNMENT:
-                        new Assignment(curTask.Tokens).Execute();
-                        return lineNumber;
-                }
-                
-            }
-            return -1;
-        }
-
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using HPMacroCommon;
 using HPMathExpression;
+using HPVariableRepository;
 using MacroLexScn;
 using MacroVariableDB;
 
@@ -9,10 +10,12 @@ namespace MacroPLC
     internal class Assignment
     {
         private TokenManager tokenManager;
-        public Assignment(IEnumerable<Token> tokens)
+        private VariableRepository varDB;
+        public Assignment(IEnumerable<Token> tokens, VariableRepository varDB)
         {
             tokenManager = new TokenManager(tokens);
             GetInfo();
+            this.varDB = varDB;
         }
 
         private void GetInfo()
@@ -36,7 +39,7 @@ namespace MacroPLC
         public void Step()
         {
             var value = MathExpression.Create(expressionTokens).Evaluate();
-            VariableDB.SetVariable(variableName, value);
+            varDB.SetVariable(variableName, value);
         }
 
         public string VariableName { get { return variableName; } }

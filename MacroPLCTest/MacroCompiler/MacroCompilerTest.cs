@@ -7,26 +7,26 @@ namespace MacroPLCTest
 {
     public class MacroCompilerTest:Specification
     {
-        [SetUp]
-        public void Setup()
-        {
-            VariableDB.InitializeVariables();
-        }
+        private MacroCompiler compiler;
+        private MacroExecutor executor;
 
         [Test]
         public void StepCompileAssignment()
         {
-            var compiler = new MacroCompiler("@10 = 1;");
+            compiler = new MacroCompiler("@10 = 1;");
             compiler.Compile();
-            var executeLine = compiler.StepExecute();
+
+            executor = new MacroExecutor(compiler.compiledTasks);
+            var executeLine = executor.StepExecute();
+
             Assert.AreEqual(0, executeLine);
-            Assert.AreEqual("1", VariableDB.LoadVariable("@10").Literal);
+            Assert.AreEqual("1", executor.Variables.LoadVariable("@10").Literal);
         }
 
         [Test]
         public void StepCompileAssignment_throwExceptionOfMissedEndStatement()
         {
-            var compiler = new MacroCompiler("@10 = 1");
+            compiler = new MacroCompiler("@10 = 1");
             Assert.Throws<Exception>(compiler.Compile);
         }
     }
