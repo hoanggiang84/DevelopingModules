@@ -67,6 +67,8 @@
     <Compile Include="Specification.cs" />
     <Compile Include="LexicalScanner\TokenManagerTest.cs" />
     <Compile Include="Statements\AssignmentTest.cs" />
+    <Compile Include="Statements\GCodeStatementTest.cs" />
+    <Compile Include="Statements\StatementTest.cs" />
     <Compile Include="VariableRepository.cs" />
   </ItemGroup>
   <ItemGroup>

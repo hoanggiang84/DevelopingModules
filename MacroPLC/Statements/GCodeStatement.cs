@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using HPGCodeValidation;
 using HPMacroCommon;
 using HPMathExpression;
 using HPTypes;
@@ -13,9 +14,11 @@ namespace MacroPLC
     public class GCodeStatement
     {
         private TokenManager tokenManager;
+        private VariableRepository varDB;
 
         public GCodeStatement(IEnumerable<Token> tokens, VariableRepository varDB)
         {
+            this.varDB = varDB;
             MathExpression.VarDB = varDB;
             tokenManager = new TokenManager(tokens);
             GetInfo();
@@ -36,21 +39,14 @@ namespace MacroPLC
                 if (ParamsEvals.ContainsKey(nextWord[0]))
                     throw new Exception(string.Format("Duplicate Char '{0}'", nextWord[0]));
 
-                tokenManager.GetNextToken();
+                nextToken = tokenManager.GetNextToken();
                 if (nextWord.Length > 1)
                 {
                     ParamsEvals.Add(nextWord[0], MathExpression.Create(nextWord.Substring(1)));
                 }
-                else
+                else if (tokenManager.LookNextToken().Text == MacroKeywords.PARANTHESE_OPEN)
                 {
-                    IEvaluate<HPType> paramEval = null;
-                    if (tokenManager.LookNextToken().Text == MacroKeywords.PARANTHESE_OPEN)
-                        paramEval = MatchParantheseExpression();
-                    else
-                    {
-                        paramEval = MathExpression.Create(tokenManager.LookNextToken().Text);
-                        tokenManager.GetNextToken();
-                    }
+                    IEvaluate<HPType> paramEval = MatchParantheseExpression();
                     ParamsEvals.Add(nextWord[0], paramEval);
                 }
                 nextToken = tokenManager.LookNextToken();
@@ -71,7 +67,13 @@ namespace MacroPLC
                 var paramValue = paramsEval.Value.Evaluate();
                 gCodeStatement += string.Format(" {0}{1}", paramChar, paramValue.Literal);
             }
-            VariableDB.OnGCodeGenerated(gCodeStatement);
+            ValidateGCode(gCodeStatement);
+            varDB.OnGCodeGenerated(gCodeStatement);
+        }
+
+        private void ValidateGCode(string gCodeStatement)
+        {
+            new GCodeValidate(gCodeStatement).Validate();
         }
 
         protected IEvaluate<HPType> MatchParantheseExpression()

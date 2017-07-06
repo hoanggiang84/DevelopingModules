@@ -29,6 +29,7 @@ namespace MacroPLC
             getRightSideExpression();
         }
 
+        private List<Token> expressionTokens = new List<Token>();
         private void getRightSideExpression()
         {
             while (tokenManager.LookNextToken().Type != TokenType.END)
@@ -43,6 +44,7 @@ namespace MacroPLC
                 throw new Exception(string.Format("Expected '{0}'", expectedString));
         }
 
+        private string variableName;
         private void getVariableName()
         {
             var varToken = tokenManager.GetNextToken();
@@ -68,21 +70,8 @@ namespace MacroPLC
                 nextToken = tokenManager.LookNextToken();
             }
             tokenManager.Match(MacroKeywords.INDEX_CLOSE);
-
-            // Get index value
-            var index = MathExpression.Create(indexTokens).Evaluate();
-            if (index.Type != VariableType.INT)
-                throw new Exception("Index must be an integer");
-
-            var indexVal = int.Parse(index.Literal);
-            if (indexVal < 0)
-                throw new Exception("Index must be non-negative");
-
-            variableName += index.Literal;
         }
 
-        private string variableName;
-        private List<Token> expressionTokens = new List<Token>();
         private List<Token> indexTokens = new List<Token>();
 
         public void Execute()
@@ -92,10 +81,22 @@ namespace MacroPLC
 
         public void Step()
         {
-            var value = MathExpression.Create(expressionTokens).Evaluate();
-            varDB.SetVariable(variableName, value);
-        }
+            var varName = variableName;
+            // Get index value
+            if (indexTokens.Count > 0)
+            {
+                var index = MathExpression.Create(indexTokens).Evaluate();
+                if (index.Type != VariableType.INT)
+                    throw new Exception("Index must be an integer");
 
-        public string VariableName { get { return variableName; } }
+                var indexVal = int.Parse(index.Literal);
+                if (indexVal < 0)
+                    throw new Exception("Index must be non-negative");
+                varName += index.Literal;
+            }
+            
+            var value = MathExpression.Create(expressionTokens).Evaluate();
+            varDB.SetVariable(varName, value);
+        }
     }
 }
