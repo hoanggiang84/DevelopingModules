@@ -9,7 +9,7 @@ namespace MacroPLC
         private List<Task> compiledTasks;
         private const int INVALID_LINE_NUMBER = -1;
 
-        public VariableRepository Variables { get; private set; }
+        public VariableRepository Variables { get; set; }
 
         public MacroExecutor(List<Task> compiledTasks)
         {
@@ -50,6 +50,9 @@ namespace MacroPLC
                         return lineNumber;
                     case TaskType.GCODE:
                         new GCodeStatement(curTask.Tokens,Variables).Execute();
+                        return lineNumber;
+                    case TaskType.BUILT_IN_FUNCTION:
+                        new BuiltInFunctionStatement(curTask.Tokens, Variables).Execute();
                         return lineNumber;
                 }
             }

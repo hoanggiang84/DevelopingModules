@@ -75,13 +75,11 @@ namespace MacroPLCTest
             AssertVariableValue("12.1", "@15");
         }
 
-
         [Test]
         public void VariableWithVariableIndex_VariableValueSet()
         {   
             var tokens = GetTokens("@[#1+4] = 12.1");
             var asign = new Assignment(tokens, varDB);
-
             varDB.SetVariable("#1", HPType.CreateType(20));
             asign.Step();
             Assert.AreEqual("12.1", varDB.LoadVariable("@24").Literal);

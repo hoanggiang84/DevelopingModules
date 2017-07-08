@@ -167,10 +167,15 @@ namespace MacroLexScn
 
         private string getIdentifierString()
         {
+            // Identifier has form: [letters][number]
             var ident = string.Empty;
-            while (IsValidIdentifierChar(lookNextChar()) 
-                || char.IsDigit(lookNextChar()))
+            while (IsValidIdentifierChar(lookNextChar()))
+            {
                 ident += getNextChar();
+                if (!char.IsDigit(lookNextChar())) continue;
+                ident += getNumberString();
+                return ident;
+            }
             return ident;
         }
 

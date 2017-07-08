@@ -133,10 +133,20 @@ namespace MacroPLCTest
         [Test]
         public void ScanIdentifierWithNumberToken()
         {
-            source = "with12ident";
+            source = "with12";
             CreateScanner();
             var token = lexScanner.ScanNext();
             Assert.AreEqual(TokenType.IDENTIFIER, token.Type);
+        }
+
+        [Test]
+        public void ScanIdentifierGCodeParameters()
+        {
+            source = "Y23.4";
+            CreateScanner();
+            var token = lexScanner.ScanNext();
+            Assert.AreEqual(TokenType.IDENTIFIER, token.Type);
+            Assert.AreEqual("Y23.4",token.Text);
         }
 
         [Test]

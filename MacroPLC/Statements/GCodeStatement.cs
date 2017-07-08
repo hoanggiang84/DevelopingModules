@@ -7,7 +7,6 @@ using HPTypes;
 using HPVariableRepository;
 using LoadIdentifierInterface;
 using MacroLexScn;
-using MacroVariableDB;
 
 namespace MacroPLC
 {

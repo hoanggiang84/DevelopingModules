@@ -180,7 +180,7 @@ namespace HPVariableRepository
         public static HPType LoadReturnValueMacroFunction(string name, List<HPType> args)
         {
             if (HPFUNC.IsReturnValueFunction(name))
-                return HPFUNC.GetFunction(name).Invoke(args);
+                return HPFUNC.GetReturnValueFunction(name).Invoke(args);
             throw new Exception(string.Format("Unrecognized Not Void Function '{0}'", name));
         }
     }

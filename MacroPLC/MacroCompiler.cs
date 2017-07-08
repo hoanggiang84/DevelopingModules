@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using HPGCodeValidation;
 using HPMacroCommon;
+using HPMacroFunctions;
 using HPMacroTask;
 using MacroLexScn;
 using System.Linq;
@@ -43,10 +44,22 @@ namespace MacroPLC
                 {
                     CreateAssignmentStatement(lineTokens,lineNum);
                 }
-                
+                else if (HPFUNC.IsMacroReturnValueFunction(lineTokens.First().Text)
+                    || HPFUNC.IsVoidMacroFunction(lineTokens.First().Text))
+                {
+                    CreateMacroBuiltInFunctionStatement(lineTokens, lineNum);
+                }
               
                 lineContent = sourceManager.GetNextLine(out lineNum);
             }
+        }
+
+        private void CreateMacroBuiltInFunctionStatement(List<Token> tokens, int lineNumber)
+        {
+            validateEndStatement(tokens,lineNumber);
+            var funcTask = new Task(TaskType.BUILT_IN_FUNCTION, tokens.Take(tokens.Count - 1).ToList());
+            funcTask.SetLineNumber(lineNumber);
+            compiledTasks.Add(funcTask);
         }
 
         private static void validateEndStatement(List<Token> tokens, int lineNumber)

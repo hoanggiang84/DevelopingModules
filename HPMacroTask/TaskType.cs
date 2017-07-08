@@ -13,5 +13,6 @@
         LABEL,
         ASSIGNMENT,
         GCODE,
+        BUILT_IN_FUNCTION
     }
 }

@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Statements\BuiltInFunctionStatement.cs" />
     <Compile Include="MacroExecutor.cs" />
     <Compile Include="Statements\Assignment.cs" />
     <Compile Include="MacroCompiler.cs" />
@@ -70,6 +71,10 @@
     <ProjectReference Include="..\..\HPGCodeValidation\HPGCodeValidation.csproj">
       <Project>{EFBB07D5-5CE4-42E3-BD93-F830BF665510}</Project>
       <Name>HPGCodeValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HPMacroFunctions\HPMacroFunctions.csproj">
+      <Project>{2F385AA8-32E4-40E2-8D4E-D93F2DB6ADF8}</Project>
+      <Name>HPMacroFunctions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\HPMathExpression\HPMathExpression.csproj">
       <Project>{A29201FF-8DB5-4DEE-BDF6-9E3275B29DA2}</Project>
