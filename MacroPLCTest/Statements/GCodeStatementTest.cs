@@ -36,5 +36,14 @@ namespace MacroPLCTest
             var statement = new GCodeStatement(tokens,varDB);
             statement.Step();
         }
+        [Test]
+        public void GCodeStatement_WithNestedParantheses()
+        {
+            varDB.SetVariable("#12", HPType.CreateType(10));
+            varDB.SetVariable("@15", HPType.CreateType(11));
+            var tokens = GetTokens("G01 X1 Y345.34 Z(#12+(2*2)) F(@15);");
+            var statement = new GCodeStatement(tokens, varDB);
+            statement.Step();
+        }
     }
 }

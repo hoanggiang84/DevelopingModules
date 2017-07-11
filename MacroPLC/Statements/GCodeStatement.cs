@@ -10,10 +10,12 @@ using MacroLexScn;
 
 namespace MacroPLC
 {
-    public class GCodeStatement
+    public class GCodeStatement : MacroStatement
     {
-        private TokenManager tokenManager;
-        private VariableRepository varDB;
+        private readonly Dictionary<char, IEvaluate<HPType>> ParamsEvals =
+            new Dictionary<char, IEvaluate<HPType>>();
+
+        private string CommandCode;
 
         public GCodeStatement(IEnumerable<Token> tokens, VariableRepository varDB)
         {
@@ -22,42 +24,47 @@ namespace MacroPLC
             tokenManager = new TokenManager(tokens);
             GetInfo();
         }
-
-        private readonly Dictionary<char, IEvaluate<HPType>> ParamsEvals =
-            new Dictionary<char, IEvaluate<HPType>>();
-
-        private string CommandCode;
    
         private void GetInfo()
         {
-            CommandCode = tokenManager.GetNextToken().Text;
-            var nextToken = tokenManager.LookNextToken();
+            CommandCode = tokenManager.IgnoreWhiteGetNextToken().Text;
+            var nextToken = tokenManager.IgnoreWhiteLookNextToken();
             while (nextToken.Type != TokenType.END)
             {
                 var nextWord = nextToken.Text;
-                if (ParamsEvals.ContainsKey(nextWord[0]))
-                    throw new Exception(string.Format("Duplicate Char '{0}'", nextWord[0]));
-
-                nextToken = tokenManager.GetNextToken();
-                if (nextWord.Length > 1)
-                {
-                    ParamsEvals.Add(nextWord[0], MathExpression.Create(nextWord.Substring(1)));
-                }
-                else if (tokenManager.LookNextToken().Text == MacroKeywords.PARANTHESE_OPEN)
-                {
-                    IEvaluate<HPType> paramEval = MatchParantheseExpression();
-                    ParamsEvals.Add(nextWord[0], paramEval);
-                }
-                nextToken = tokenManager.LookNextToken();
+                checkDuplicateParameters(nextWord);
+                getParametersAndExpressions();
+                nextToken = tokenManager.IgnoreWhiteLookNextToken();
             }
         }
 
-        public void Execute()
+        private void getParametersAndExpressions()
+        {
+            var nextToken = tokenManager.IgnoreWhiteGetNextToken();
+            var nextWord = nextToken.Text;
+            if (nextWord.Length > 1)
+            {
+                ParamsEvals.Add(nextWord[0], MathExpression.Create(nextWord.Substring(1)));
+            }
+            else if (tokenManager.IgnoreWhiteLookNextToken().Text == MacroKeywords.PARANTHESE_OPEN)
+            {
+                var paramEval = MatchParantheseExpression();
+                ParamsEvals.Add(nextWord[0], paramEval);
+            }
+        }
+
+        private void checkDuplicateParameters(string nextWord)
+        {
+            if (ParamsEvals.ContainsKey(nextWord[0]))
+                throw new Exception(string.Format("Duplicate parameters '{0}'", nextWord[0]));
+        }
+
+        public override void Execute()
         {
             Step();
         }
 
-        public void Step()
+        public override void Step()
         {
             var gCodeStatement = CommandCode;
             foreach (var paramsEval in ParamsEvals)
@@ -70,40 +77,11 @@ namespace MacroPLC
             varDB.OnGCodeGenerated(gCodeStatement);
         }
 
-        private void ValidateGCode(string gCodeStatement)
+        private static void ValidateGCode(string gCodeStatement)
         {
             new GCodeValidate(gCodeStatement).Validate();
         }
 
-        protected IEvaluate<HPType> MatchParantheseExpression()
-        {
-            tokenManager.Match(MacroKeywords.PARANTHESE_OPEN);
-
-            var nestedParanCount = 1;
-            var expTokens = new List<Token>();
-            var keyword = tokenManager.LookNextToken().Text;
-            while (!((keyword == MacroKeywords.PARANTHESE_CLOSE && nestedParanCount == 1)
-                || keyword == MacroKeywords.END))
-            {
-                switch (keyword)
-                {
-                    case MacroKeywords.PARANTHESE_OPEN:
-                        nestedParanCount++;
-                        break;
-                    case MacroKeywords.PARANTHESE_CLOSE:
-                        nestedParanCount--;
-                        break;
-                }
-                expTokens.Add(tokenManager.GetNextToken());
-                keyword = tokenManager.LookNextToken().Text;
-            }
-
-            var ParanExpr = MathExpression.Create(expTokens);
-            tokenManager.Match(MacroKeywords.PARANTHESE_CLOSE);
-            nestedParanCount--;
-            if (nestedParanCount != 0)
-                throw new Exception("Unbalanced Paranthesis");
-            return ParanExpr;
-        }
+    
     }
 }

@@ -17,7 +17,7 @@ namespace MacroLexScn
         private List<Token> tokens = new List<Token>();
         private int CurrentIndex;
 
-        public Token GetNextToken()
+        public Token IgnoreWhiteGetNextToken()
         {
             IgnoreWhiteSpace();
             if (CurrentIndex < tokens.Count)
@@ -25,7 +25,7 @@ namespace MacroLexScn
             return GetLastToken();
         }
 
-        public Token LookNextToken()
+        public Token IgnoreWhiteLookNextToken()
         {
             IgnoreWhiteSpace();
             if (CurrentIndex < tokens.Count)
@@ -70,7 +70,7 @@ namespace MacroLexScn
 
         public string GetIdentifier()
         {
-            var nextToken = GetNextToken();
+            var nextToken = IgnoreWhiteGetNextToken();
             Validate(nextToken, TokenType.IDENTIFIER);
             if (MacroKeywords.IsKeyword(nextToken.Text))
                 throw new Exception(string.Format("Error: Invalid identifier name '{0}'", nextToken.Text));
@@ -79,7 +79,7 @@ namespace MacroLexScn
 
         public string GetVariable()
         {
-            var nextToken = GetNextToken();
+            var nextToken = IgnoreWhiteGetNextToken();
             if(!(nextToken.Type == TokenType.GLOBAL_VAR
                 || nextToken.Type == TokenType.LOCAL_VAR
                 || MacroKeywords.IsKeyword(nextToken.Text)))

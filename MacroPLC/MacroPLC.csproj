@@ -62,6 +62,7 @@
     <Compile Include="SourceManager\SourceManager.cs" />
     <Compile Include="SourceManager\SourceReader.cs" />
     <Compile Include="Statements\GCodeStatement.cs" />
+    <Compile Include="Statements\MacroStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\LadderMonitor\UtilitiesVS2008WinCE\UtilitiesVS2008WinCE.csproj">

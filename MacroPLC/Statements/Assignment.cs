@@ -8,10 +8,11 @@ using MacroLexScn;
 
 namespace MacroPLC
 {
-    public class Assignment
+    public class Assignment:MacroStatement
     {
-        private TokenManager tokenManager;
-        private VariableRepository varDB;
+        private List<Token> indexTokens = new List<Token>();
+        private List<Token> expressionTokens = new List<Token>();
+
         public Assignment(IEnumerable<Token> tokens, VariableRepository varDB)
         {
             this.varDB = varDB;
@@ -29,74 +30,70 @@ namespace MacroPLC
             getRightSideExpression();
         }
 
-        private List<Token> expressionTokens = new List<Token>();
         private void getRightSideExpression()
         {
-            while (tokenManager.LookNextToken().Type != TokenType.END)
-                expressionTokens.Add(tokenManager.GetNextToken());
-        }
-
-        private void Match(string expectedString)
-        {
-            if (tokenManager.LookNextToken().Text == expectedString)
-                tokenManager.Match(expectedString);
-            else
-                throw new Exception(string.Format("Expected '{0}'", expectedString));
+            expressionTokens.AddRange(GetRemainTokens());
         }
 
         private string variableName;
         private void getVariableName()
         {
-            var varToken = tokenManager.GetNextToken();
-            if(varToken.Type != TokenType.GLOBAL_VAR && varToken.Type != TokenType.LOCAL_VAR)
-                throw new Exception("Expected variable at the start of statement");
+            var varToken = tokenManager.IgnoreWhiteGetNextToken();
+            if(!IsVariableToken(varToken))
+                throw new Exception("Expected variable at the start of assignment statement");
 
             variableName = varToken.Text;
             if (variableName != "#" && variableName != "@") return; // No indexer
 
             // Assignment uses indexer #[i] or @[i]
-            var nextToken = tokenManager.LookNextToken();
-            if (nextToken.Text != MacroKeywords.INDEX_OPEN)
-                throw new Exception(string.Format("Expected '{0}'", MacroKeywords.INDEX_OPEN));
+            // Index open
+            var nextToken = tokenManager.IgnoreWhiteLookNextToken();
+            Match(MacroKeywords.INDEX_OPEN);
             
-            tokenManager.Match(MacroKeywords.INDEX_OPEN);
-            nextToken = tokenManager.LookNextToken();
+            // Index math expression
+            nextToken = tokenManager.IgnoreWhiteLookNextToken();
             indexTokens.Clear();
             while (nextToken.Text != MacroKeywords.INDEX_CLOSE)
             {
                 if (nextToken.Type == TokenType.END)
                     throw new Exception(string.Format("Expected '{0}'", MacroKeywords.INDEX_CLOSE));
-                indexTokens.Add(tokenManager.GetNextToken());
-                nextToken = tokenManager.LookNextToken();
+
+                indexTokens.Add(tokenManager.IgnoreWhiteGetNextToken());
+                nextToken = tokenManager.IgnoreWhiteLookNextToken();
             }
+
+            // Index close
             tokenManager.Match(MacroKeywords.INDEX_CLOSE);
         }
 
-        private List<Token> indexTokens = new List<Token>();
-
-        public void Execute()
+        public override void Execute()
         {
             Step();
         }
 
-        public void Step()
+        public override void Step()
         {
             var varName = variableName;
             // Get index value
             if (indexTokens.Count > 0)
             {
                 var index = MathExpression.Create(indexTokens).Evaluate();
-                if (index.Type != VariableType.INT)
-                    throw new Exception("Index must be an integer");
-
-                var indexVal = int.Parse(index.Literal);
-                if (indexVal < 0)
-                    throw new Exception("Index must be non-negative");
+                validateIndexValue(index);
                 varName += index.Literal;
             }
             
             var value = MathExpression.Create(expressionTokens).Evaluate();
             varDB.SetVariable(varName, value);
+        }
+
+        private static void validateIndexValue(HPType index)
+        {
+            if (index.Type != VariableType.INT)
+                throw new Exception(string.Format("Index must be an integer '{0}'", index.Literal));
+
+            var indexVal = int.Parse(index.Literal);
+            if (indexVal < 0)
+                throw new Exception(string.Format("Index must be non-negative'{0}'", index.Literal));
         }
     }
 }

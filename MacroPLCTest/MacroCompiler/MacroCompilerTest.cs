@@ -78,6 +78,16 @@ namespace MacroPLCTest
         }
 
         [Test]
+        public void StepCompileGcode_withNestedParantheses()
+        {
+            Compile("G01 X1 Y345.34 Z(#12+(2 + 1)) F(@15);");
+            executor.Variables.SetVariable("#12", HPType.CreateType(10));
+            executor.Variables.SetVariable("@15", HPType.CreateType(12));
+            ExecuteTasksAndAssertNextExecuteLine(0);
+            Assert.AreEqual("G01 X1 Y345.34 Z13 F12", ExecutedCode);
+        }
+
+        [Test]
         public void StepCompile_Built_InFunction()
         {
             Compile("WAIT();");

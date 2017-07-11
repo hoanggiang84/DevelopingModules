@@ -25,9 +25,9 @@ namespace MacroPLCTest
         public void LookNextToken_IgnoredWhiteToken()
          {
             var tokenMgr = new TokenManager(tokens);
-            var t = tokenMgr.LookNextToken();
+            var t = tokenMgr.IgnoreWhiteLookNextToken();
             tokenMgr.Match(t.Text);
-            t = tokenMgr.LookNextToken();
+            t = tokenMgr.IgnoreWhiteLookNextToken();
             Assert.IsTrue(t.Text.IsNotNullOrWhite());
             Assert.AreEqual("<",t.Text);
          }
@@ -36,8 +36,8 @@ namespace MacroPLCTest
         public void GetNextToken_IgnoredWhiteToken()
         {
             var tokenMgr = new TokenManager(tokens);
-            var t = tokenMgr.GetNextToken();
-            t = tokenMgr.GetNextToken();
+            var t = tokenMgr.IgnoreWhiteGetNextToken();
+            t = tokenMgr.IgnoreWhiteGetNextToken();
             Assert.IsTrue(t.Text.IsNotNullOrWhite());
             Assert.AreEqual("<", t.Text);
         }
@@ -46,7 +46,7 @@ namespace MacroPLCTest
         public void LookNextToken_LastToken_ReturnEndToken()
         {
             var tokenMgr = new TokenManager(new List<Token>(){new Token(" ",TokenType.WHITE_SPACE)});
-            var t = tokenMgr.LookNextToken();
+            var t = tokenMgr.IgnoreWhiteLookNextToken();
             Assert.AreEqual(TokenType.END, t.Type);
         }
 
@@ -54,7 +54,7 @@ namespace MacroPLCTest
         public void GetNextToken_LastToken_ReturnEndToken()
         {
             var tokenMgr = new TokenManager(new List<Token>() { new Token(" ", TokenType.WHITE_SPACE) });
-            var t = tokenMgr.GetNextToken();
+            var t = tokenMgr.IgnoreWhiteGetNextToken();
             Assert.AreEqual(TokenType.END, t.Type);
         }
     }
