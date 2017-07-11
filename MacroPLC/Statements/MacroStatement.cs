@@ -52,6 +52,22 @@ namespace MacroPLC
             return ParanExpr;
         }
 
+        protected void validateENDToken()
+        {
+            var lastToken = tokenManager.IgnoreWhiteGetNextToken();
+            if (lastToken.Type != TokenType.END)
+                throw new Exception(string.Format("Invalid statement"));
+        }
+
+        public virtual void Execute()
+        {
+        }
+
+        public virtual void Step()
+        {
+        }
+
+        #region Private Functions
         private IEvaluate<HPType> getParanthesesExpression(out int nestedParanCount)
         {
             nestedParanCount = 1;
@@ -81,12 +97,6 @@ namespace MacroPLC
                    && nestedParan == 1;
         }
 
-        public virtual void Execute()
-        {
-        }
-
-        public virtual void Step()
-        {
-        }
+        #endregion
     }
 }

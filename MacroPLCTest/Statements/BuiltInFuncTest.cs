@@ -10,8 +10,8 @@ namespace MacroPLCTest
         public void BuiltInTest_ExistFunctionName()
         {
             var tokens = GetTokens("WAIT()");
-            var functStatement = new BuiltInFunctionStatement(tokens, varDB);
-            functStatement.Step();
+            var funcStatement = new BuiltInFunctionStatement(tokens, varDB);
+            funcStatement.Step();
         }
 
         [Test]
@@ -28,6 +28,15 @@ namespace MacroPLCTest
             Assert.Throws<Exception>(() => new BuiltInFunctionStatement(tokens, varDB));
             tokens = GetTokens("WAIT(");
             Assert.Throws<Exception>(() => new BuiltInFunctionStatement(tokens, varDB));
+        }
+
+        [Test]
+        public void BuiltInTest_ReturnValueFunction()
+        {
+            var tokens = GetTokens("MAX(1,2)");
+            var funcStatement = new BuiltInFunctionStatement(tokens, varDB);
+            funcStatement.Execute();
+
         }
     }
 }

@@ -28,6 +28,7 @@ namespace MacroPLC
         private void GetInfo()
         {
             CommandCode = tokenManager.IgnoreWhiteGetNextToken().Text;
+
             var nextToken = tokenManager.IgnoreWhiteLookNextToken();
             while (nextToken.Type != TokenType.END)
             {
@@ -81,7 +82,5 @@ namespace MacroPLC
         {
             new GCodeValidate(gCodeStatement).Validate();
         }
-
-    
     }
 }
