@@ -54,7 +54,7 @@ namespace MacroPLCTest
 
         [Test]
         public void VariableWithNonIntegerIndexAssignment_ThrowException()
-        { 
+        {
             var tokens = GetTokens("@[11.1] = 12.1");
             Assert.Throws<Exception>(() => new Assignment(tokens, varDB).Execute(), "Non-integer index");
         }
@@ -69,10 +69,11 @@ namespace MacroPLCTest
         [Test]
         public void VariableWithMathExpressionIndex_VariableValueSet()
         {
-            var tokens = GetTokens("@[11+4] = 12.1");
+            varDB.SetVariable("#10", HPType.CreateType(10));
+            var tokens = GetTokens("@[11+4] = 12.1 + #[10]");
             var asign = new Assignment(tokens, varDB);
             asign.Step();
-            AssertVariableValue("12.1", "@15");
+            AssertVariableValue("22.1", "@15");
         }
 
         [Test]

@@ -44,8 +44,7 @@ namespace MacroPLC
                 {
                     CreateAssignmentStatement(lineTokens,lineNum);
                 }
-                else if (HPFUNC.IsMacroReturnValueFunction(lineTokens.First().Text)
-                    || HPFUNC.IsVoidMacroFunction(lineTokens.First().Text))
+                else if (HPFUNC.IsMacroFuntion(lineTokens.First().Text))
                 {
                     CreateMacroBuiltInFunctionStatement(lineTokens, lineNum);
                 }
