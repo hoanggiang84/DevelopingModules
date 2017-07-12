@@ -48,7 +48,8 @@ namespace MacroPLC
                 {
                     if (currentExpressionToken.Count <= 0)
                         throw new Exception(string.Format(
-                            "Expected argument in function '{0}'", FunctionToken.Text));
+                            "Invalid symbol '{0}' in function '{1}'", 
+                            MacroKeywords.COMMA, FunctionToken.Text));
                     
                     argumentList.Add(currentExpressionToken);
                     currentExpressionToken.Clear();

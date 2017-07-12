@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using HPMacroCommon;
 using HPMathExpression;
 using HPTypes;
@@ -43,7 +44,8 @@ namespace MacroPLC
                 throw new Exception("Expected variable at the start of assignment statement");
 
             variableName = varToken.Text;
-            if (variableName != "#" && variableName != "@") return; // No indexer
+            if (!isVariableChar(variableName)) 
+                return; // No indexer
 
             // Assignment uses indexer #[i] or @[i]
             // Index open
@@ -63,7 +65,13 @@ namespace MacroPLC
             }
 
             // Index close
-            tokenManager.Match(MacroKeywords.INDEX_CLOSE);
+            Match(MacroKeywords.INDEX_CLOSE);
+        }
+
+        private static bool isVariableChar(string var_name)
+        {
+            return var_name == MacroKeywords.GLOBAL_VARIABLE_CHAR.ToString(CultureInfo.InvariantCulture)
+                   || var_name == MacroKeywords.LOCAL_VARIABLE_CHAR.ToString(CultureInfo.InvariantCulture);
         }
 
         public override void Execute()
@@ -74,6 +82,7 @@ namespace MacroPLC
         public override void Step()
         {
             var varName = variableName;
+
             // Get index value
             if (indexTokens.Count > 0)
             {

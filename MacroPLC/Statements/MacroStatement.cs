@@ -1,5 +1,6 @@
 ﻿using System;
 using HPMacroCommon;
+using HPMacroTask;
 using HPMathExpression;
 using HPTypes;
 using HPVariableRepository;
@@ -11,6 +12,8 @@ namespace MacroPLC
 {
     public abstract class MacroStatement
     {
+        protected static MacroStatement NULL_STATEMENT = new NullStatement();
+
         protected TokenManager tokenManager;
         protected VariableRepository varDB; 
 
@@ -67,6 +70,24 @@ namespace MacroPLC
         {
         }
 
+        public static MacroStatement CreateStatement(
+            TaskType task_type, 
+            List<Token> tokens, 
+            VariableRepository variables)
+        {
+            switch (task_type)
+            {
+                case TaskType.ASSIGNMENT:
+                    return new Assignment(tokens, variables);
+                case TaskType.GCODE:
+                    return new GCodeStatement(tokens, variables);
+                case TaskType.BUILT_IN_FUNCTION:
+                    return new BuiltInFunctionStatement(tokens, variables);
+            }
+
+            return NULL_STATEMENT;
+        }
+
         #region Private Functions
         private IEvaluate<HPType> getParanthesesExpression(out int nestedParanCount)
         {
@@ -98,5 +119,9 @@ namespace MacroPLC
         }
 
         #endregion
+    }
+
+    internal class NullStatement : MacroStatement
+    {
     }
 }
