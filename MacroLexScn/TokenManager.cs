@@ -8,6 +8,18 @@ namespace MacroLexScn
     {
         public static readonly Token END_TOKEN = new Token(MacroKeywords.END, TokenType.END);
 
+        public TokenManager(string expr)
+        {
+            var lex_scn = new MacroLexicalScanner(expr);
+            var current_token = lex_scn.ScanNext();
+            while (current_token.Type != TokenType.END)
+            {
+                tokens.Add(current_token);
+                current_token = lex_scn.ScanNext();
+            }
+            CurrentIndex = 0;
+        }
+
         public TokenManager(IEnumerable<Token> tokens)
         {
             this.tokens.AddRange(tokens);
@@ -38,14 +50,14 @@ namespace MacroLexScn
             if(CurrentIndex >= tokens.Count)
                 return;
 
-            var curToken = tokens[CurrentIndex];
-            while (CurrentIndex < tokens.Count && curToken.Type == TokenType.WHITE_SPACE)
+            var current_token = tokens[CurrentIndex];
+            while (CurrentIndex < tokens.Count && current_token.Type == TokenType.WHITE_SPACE)
             {
-                Match(curToken.Text);
+                Match(current_token.Text);
                 if (CurrentIndex >= tokens.Count)
-                    curToken = END_TOKEN;
+                    current_token = END_TOKEN;
                 else
-                    curToken = tokens[CurrentIndex];
+                    current_token = tokens[CurrentIndex];
             }
         }
 
@@ -62,29 +74,29 @@ namespace MacroLexScn
         /// </summary>
         public Token Match(string str)
         {
-            var nextToken = tokens[CurrentIndex++];
-            if (nextToken.Text != str)
-                throw new Exception(string.Format("Expected: '{0}'. But was: '{1}'", str, nextToken.Text));
-            return nextToken;
+            var next_token = tokens[CurrentIndex++];
+            if (next_token.Text != str)
+                throw new Exception(string.Format("Expected: '{0}'. But was: '{1}'", str, next_token.Text));
+            return next_token;
         }
 
         public string GetIdentifier()
         {
-            var nextToken = IgnoreWhiteGetNextToken();
-            Validate(nextToken, TokenType.IDENTIFIER);
-            if (MacroKeywords.IsKeyword(nextToken.Text))
-                throw new Exception(string.Format("Error: Invalid identifier name '{0}'", nextToken.Text));
-            return nextToken.Text;
+            var next_token = IgnoreWhiteGetNextToken();
+            Validate(next_token, TokenType.IDENTIFIER);
+            if (MacroKeywords.IsKeyword(next_token.Text))
+                throw new Exception(string.Format("Error: Invalid identifier name '{0}'", next_token.Text));
+            return next_token.Text;
         }
 
         public string GetVariable()
         {
-            var nextToken = IgnoreWhiteGetNextToken();
-            if(!(nextToken.Type == TokenType.GLOBAL_VAR
-                || nextToken.Type == TokenType.LOCAL_VAR
-                || MacroKeywords.IsKeyword(nextToken.Text)))
-                throw new Exception(string.Format("Error: Invalid variable name '{0}'", nextToken.Text));
-            return nextToken.Text;
+            var next_token = IgnoreWhiteGetNextToken();
+            if(!(next_token.Type == TokenType.GLOBAL_VAR
+                || next_token.Type == TokenType.LOCAL_VAR
+                || MacroKeywords.IsKeyword(next_token.Text)))
+                throw new Exception(string.Format("Error: Invalid variable name '{0}'", next_token.Text));
+            return next_token.Text;
         }
 
         public void Reset()
@@ -92,10 +104,12 @@ namespace MacroLexScn
             CurrentIndex = 0;
         }
 
-        private void Validate(Token token, TokenType expectType)
+        private void Validate(Token token, TokenType expect_type)
         {
-            if (token.Type != expectType)
-                throw new Exception(string.Format("Error: Invalid String '{0}'. Expected: {1}", token.Text, expectType));
+            if (token.Type != expect_type)
+                throw new Exception(string.Format(
+                    "Error: Invalid String '{0}'. Expected: {1}", 
+                    token.Text, expect_type));
         }
 
         public Token LookNextNextToken()

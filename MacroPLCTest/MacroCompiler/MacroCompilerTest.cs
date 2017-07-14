@@ -1,99 +1,79 @@
-﻿using HPTypes;
-using HPVariableRepository;
+﻿using System.Collections.Generic;
+using HPMacroTask;
 using MacroPLC;
 using NUnit.Framework;
-using System;
 
 namespace MacroPLCTest
 {
     public class MacroCompilerTest:Specification
     {
-        private MacroCompiler compiler;
-        private MacroExecutor executor;
-        private string ExecutedCode;
+        protected List<Task> tasks;
 
-        private void Compile(string source)
+        private void compileToTaskList(string source)
         {
-            compiler = new MacroCompiler(source);
-            compiler.Compile();
-            executor = new MacroExecutor(compiler.compiledTasks);
-            executor.Variables.GCodeGenerated += VariablesOnGCodeGenerated;
-            ExecutedCode = string.Empty;
+            var macro_compiler = new MacroCompiler(source);
+            macro_compiler.Compile();
+            tasks = macro_compiler.compiledTasks;
         }
 
-        private void VariablesOnGCodeGenerated(object sender, GCodeStatementArg gCodeStatementArg)
+        private void AssertTasksCount(int count)
         {
-            ExecutedCode = gCodeStatementArg.Statement;
+            Assert.AreEqual(count, tasks.Count);
         }
 
-        private void ExecuteTasksAndAssertNextExecuteLine(int lineNumber)
+        private void AssertTaskType(int taskIndex, TaskType assertTask)
         {
-            var executeLine = executor.StepExecute();
-            Assert.AreEqual(lineNumber, executeLine);
-        }
-
-        private void AssertVariableLiteral(string literal, string varName)
-        {
-            Assert.AreEqual(literal, executor.Variables.LoadVariable(varName).Literal);
+            Assert.AreEqual(assertTask, tasks[taskIndex].Type);
         }
 
         [Test]
-        public void StepCompileAssignment_throwExceptionOfMissedEndStatement()
+        public void Compile_Assigment_returnAsignmentTask()
         {
-            compiler = new MacroCompiler("@10 = 1");
-            Assert.Throws<Exception>(compiler.Compile);
+            compileToTaskList("@10 = 12.1;");
+            AssertTasksCount(1);
+            AssertTaskType(0, TaskType.ASSIGNMENT);
         }
 
         [Test]
-        public void StepCompileAssignment()
+        public void Compile_GCode_returnGCodeTask()
         {
-            Compile("@10 = 1;");
-            ExecuteTasksAndAssertNextExecuteLine(0);
-            AssertVariableLiteral("1","@10");
+            compileToTaskList("G01 X1 Y10 Z14 F11;");
+            AssertTasksCount(1);
+            AssertTaskType(0,TaskType.GCODE);
         }
 
         [Test]
-        public void StepCompileAssignmentWithIndexer()
+        public void Compile_MacroFunction_returnFunctionTask()
         {
-            Compile("@[11] = 1 + 11;");
-            ExecuteTasksAndAssertNextExecuteLine(0);
-            AssertVariableLiteral("12", "@11");
+            compileToTaskList("WAIT();");
+            AssertTasksCount(1);
+            AssertTaskType(0, TaskType.BUILT_IN_FUNCTION);
         }
 
         [Test]
-        public void StepCompileGCode()
+        public void Compile_ManySimpleStatements_returnTaskList()
         {
-            Compile("G01 X1 Y10 Z14 F11;");
-            ExecuteTasksAndAssertNextExecuteLine(0);
+            compileToTaskList(
+                "@10 = 12.1;\r\n" +
+                "G01 X1 Y10 Z14 F11; \r\n"+
+                "WAIT();");
+            AssertTasksCount(3);
+            AssertTaskType(0, TaskType.ASSIGNMENT);
+            AssertTaskType(1, TaskType.GCODE);
+            AssertTaskType(2, TaskType.BUILT_IN_FUNCTION);
         }
 
         [Test]
-        public void StepCompileGcode_withVariableParameters()
+        public void Compile_IfStatement_returnTaskList()
         {
-            Compile("G01 X1 Y345.34 Z(#12 + 1) F(@15);");
-            executor.Variables.SetVariable("#12", HPType.CreateType(10));
-            executor.Variables.SetVariable("@15", HPType.CreateType(12));
-            ExecuteTasksAndAssertNextExecuteLine(0);
-            Assert.AreEqual("G01 X1 Y345.34 Z11 F12",ExecutedCode);
+            var src_code = "IF (2<4) \r\n" +
+                            "WAIT(); \r\n" +
+                            "ENDIF; ";
+            compileToTaskList(src_code);
+            AssertTaskType(0, TaskType.BOOLEAN_EVALUATE);
+            AssertTaskType(1, TaskType.BRANCH_FALSE);
+            AssertTaskType(2, TaskType.BUILT_IN_FUNCTION);
+            AssertTaskType(3, TaskType.LABEL);
         }
-
-        [Test]
-        public void StepCompileGcode_withNestedParantheses()
-        {
-            Compile("G01 X1 Y345.34 Z(#12+(2 + 1)) F(@15);");
-            executor.Variables.SetVariable("#12", HPType.CreateType(10));
-            executor.Variables.SetVariable("@15", HPType.CreateType(12));
-            ExecuteTasksAndAssertNextExecuteLine(0);
-            Assert.AreEqual("G01 X1 Y345.34 Z13 F12", ExecutedCode);
-        }
-
-        [Test]
-        public void StepCompile_Built_InFunction()
-        {
-            Compile("WAIT();");
-            ExecuteTasksAndAssertNextExecuteLine(0);
-        }
-
-
     }
 }

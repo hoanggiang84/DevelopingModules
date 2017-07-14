@@ -7,6 +7,12 @@ namespace MacroPLCTest
 {
     public class StatementTest:Specification
     {
+        [SetUp]
+        public void Setup()
+        {
+            varDB.InitializeVariables();
+        }
+
         protected VariableRepository varDB = new VariableRepository();
 
         protected void AssertVariableValue(string literal, string varName)

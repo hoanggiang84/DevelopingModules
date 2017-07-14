@@ -7,12 +7,6 @@ namespace MacroPLCTest
 {
     public class AssignmentTest:StatementTest
     {
-        [SetUp]
-        public void Setup()
-        {
-            varDB.InitializeVariables();
-        }
-
         [Test]
         public void InvalidSyntaxNoValidVariable_ThrowException()
         {
@@ -33,7 +27,7 @@ namespace MacroPLCTest
             var tokens = GetTokens("@10 = 12.1");
             var asign = new Assignment(tokens, varDB);
             asign.Step();
-            Assert.AreEqual("12.1", varDB.LoadVariable("@10").Literal);
+            AssertVariableValue("12.1", "@10");
         }
 
         [Test]
@@ -42,7 +36,7 @@ namespace MacroPLCTest
             var tokens = GetTokens("@[11] = 12.1");
             var asign = new Assignment(tokens, varDB);
             asign.Step();
-            Assert.AreEqual("12.1", varDB.LoadVariable("@11").Literal);
+            AssertVariableValue("12.1", "@11");
         }
 
         [Test]
@@ -83,7 +77,7 @@ namespace MacroPLCTest
             var asign = new Assignment(tokens, varDB);
             varDB.SetVariable("#1", HPType.CreateType(20));
             asign.Step();
-            Assert.AreEqual("12.1", varDB.LoadVariable("@24").Literal);
+            AssertVariableValue("12.1","@24");
         }
     }
 }

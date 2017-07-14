@@ -47,6 +47,10 @@ namespace MacroPLC
                 {
                     CreateMacroBuiltInFunctionStatement(lineTokens, lineNum);
                 }
+                else if (lineTokens.First().Text == MacroKeywords.IF)
+                {
+
+                }
               
                 lineContent = sourceManager.GetNextLine(out lineNum);
             }
@@ -67,29 +71,35 @@ namespace MacroPLC
             CreateOneLineStatement(TaskType.ASSIGNMENT, tokens, line_num);
         }
 
-
         #region Private refactoring functions
 
-        private static List<Token> ExtractStatementTokens(ICollection<Token> tokens)
+        private static List<Token> ExtractStatementTokens(IEnumerable<Token> tokens)
         {
-            // Skip last token (end statement token ';')
-            return tokens.Take(tokens.Count - 1).ToList();
+            // Skip last end statement token ';'
+            var tokenList = new List<Token>();
+            var token_mgr = new TokenManager(tokens);
+            var next_token = token_mgr.IgnoreWhiteLookNextToken();
+            while (next_token.Type != TokenType.END
+                && next_token.Text != MacroKeywords.END_STATEMENT)
+            {
+                tokenList.Add(token_mgr.IgnoreWhiteGetNextToken());
+                next_token = token_mgr.IgnoreWhiteLookNextToken();
+            }
+
+            token_mgr.Match(MacroKeywords.END_STATEMENT);
+
+            if(token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
+                throw new Exception(string.Format("Unexpected string '{0}'", 
+                    token_mgr.IgnoreWhiteGetNextToken().Text));
+
+            return tokenList;
         }
 
         private void CreateOneLineStatement(TaskType task_type, List<Token> tokens, int line_num)
         {
-            validateEndStatement(tokens, line_num);
             var funcTask = new Task(task_type, ExtractStatementTokens(tokens));
             funcTask.SetLineNumber(line_num);
             compiledTasks.Add(funcTask);
-        }
-
-        private static void validateEndStatement(List<Token> tokens, int line_num)
-        {
-            if (tokens.Last().Text != MacroKeywords.END_STATEMENT)
-                throw new Exception(string.Format(
-                    "Expected '{0}' at line {1}", 
-                    MacroKeywords.END_STATEMENT, line_num));
         }
 
         private static bool isVariableToken(Token tok)

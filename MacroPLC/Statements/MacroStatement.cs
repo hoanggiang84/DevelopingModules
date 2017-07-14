@@ -1,10 +1,7 @@
 ﻿using System;
 using HPMacroCommon;
 using HPMacroTask;
-using HPMathExpression;
-using HPTypes;
 using HPVariableRepository;
-using LoadIdentifierInterface;
 using MacroLexScn;
 using System.Collections.Generic;
 
@@ -12,6 +9,8 @@ namespace MacroPLC
 {
     public abstract class MacroStatement
     {
+        public EventHandler<StatementArg> StepNotify ;
+
         protected static MacroStatement NULL_STATEMENT = new NullStatement();
 
         protected TokenManager tokenManager;
@@ -39,7 +38,7 @@ namespace MacroPLC
                 || varToken.Type == TokenType.LOCAL_VAR;
         }
 
-        protected IEvaluate<HPType> MatchParantheseExpression()
+        protected List<Token> MatchParantheseExpression()
         {
             int nestedParanCount;
             Match(MacroKeywords.PARANTHESE_OPEN);
@@ -89,7 +88,7 @@ namespace MacroPLC
         }
 
         #region Private Functions
-        private IEvaluate<HPType> getParanthesesExpression(out int nestedParanCount)
+        private List<Token> getParanthesesExpression(out int nestedParanCount)
         {
             nestedParanCount = 1;
             var paranExpressionTokens = new List<Token>();
@@ -109,7 +108,7 @@ namespace MacroPLC
                 paranExpressionTokens.Add(tokenManager.IgnoreWhiteGetNextToken());
                 keyword = tokenManager.IgnoreWhiteLookNextToken().Text;
             }
-            return MathExpression.Create(paranExpressionTokens);
+            return paranExpressionTokens;
         }
 
         private bool ParanthesesBalanced(string keyword, int nestedParan)
@@ -119,6 +118,17 @@ namespace MacroPLC
         }
 
         #endregion
+    }
+
+    public class StatementArg : EventArgs
+    {
+        public readonly int LineNumber;
+        public readonly string Statement;
+        public StatementArg(string statement, int line_num)
+        {
+            Statement = statement;
+            LineNumber = line_num;
+        }
     }
 
     internal class NullStatement : MacroStatement

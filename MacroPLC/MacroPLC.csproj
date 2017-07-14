@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SourceManager\SourceLine.cs" />
+    <Compile Include="SourceManager\StatementType.cs" />
     <Compile Include="Statements\BuiltInFunctionStatement.cs" />
     <Compile Include="MacroExecutor.cs" />
     <Compile Include="Statements\Assignment.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="SourceManager\SourceManager.cs" />
     <Compile Include="SourceManager\SourceReader.cs" />
     <Compile Include="Statements\GCodeStatement.cs" />
+    <Compile Include="Statements\IfStatement.cs" />
     <Compile Include="Statements\MacroStatement.cs" />
   </ItemGroup>
   <ItemGroup>

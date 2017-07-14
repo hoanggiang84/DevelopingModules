@@ -7,12 +7,6 @@ namespace MacroPLCTest
 {
     public class GCodeStatementTest:StatementTest
     {
-        [SetUp]
-        public void Setup()
-        {
-            varDB.InitializeVariables();
-        }
-
         [Test]
         public void GCodeStatement_WithNumberParameters()
         {

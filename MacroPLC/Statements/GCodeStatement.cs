@@ -49,7 +49,8 @@ namespace MacroPLC
             }
             else if (tokenManager.IgnoreWhiteLookNextToken().Text == MacroKeywords.PARANTHESE_OPEN)
             {
-                var paramEval = MatchParantheseExpression();
+                var paramTokens = MatchParantheseExpression();
+                var paramEval = MathExpression.Create(paramTokens);
                 ParamsEvals.Add(nextWord[0], paramEval);
             }
         }
