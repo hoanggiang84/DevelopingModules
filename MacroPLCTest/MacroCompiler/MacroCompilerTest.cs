@@ -75,5 +75,39 @@ namespace MacroPLCTest
             AssertTaskType(2, TaskType.BUILT_IN_FUNCTION);
             AssertTaskType(3, TaskType.LABEL);
         }
+
+        [Test]
+        public void Compile_IfStatementWithManyStatemets_returnTaskList()
+        {
+            var src_code = "IF (2<4) \r\n" +
+                            "WAIT(); \r\n" +
+                            "@1 = 1; \r\n" +
+                            "ENDIF; ";
+            compileToTaskList(src_code);
+            AssertTaskType(0, TaskType.BOOLEAN_EVALUATE);
+            AssertTaskType(1, TaskType.BRANCH_FALSE);
+            AssertTaskType(2, TaskType.BUILT_IN_FUNCTION);
+            AssertTaskType(3, TaskType.ASSIGNMENT);
+            AssertTaskType(4, TaskType.LABEL);
+        }
+
+        [Test]
+        public void Compile_IfElseStatement_returnTaskList()
+        {
+            var src_code = "IF (2>4) \r\n" +
+                            "WAIT(); \r\n" +
+                            "ELSE \r\n"    +
+                            "@1 = 1; \r\n" +
+                            "ENDIF; ";
+            compileToTaskList(src_code);
+            var cnt = 0;
+            AssertTaskType(cnt++, TaskType.BOOLEAN_EVALUATE);
+            AssertTaskType(cnt++, TaskType.BRANCH_FALSE);
+            AssertTaskType(cnt++, TaskType.BUILT_IN_FUNCTION);
+            AssertTaskType(cnt++, TaskType.BRANCH);
+            AssertTaskType(cnt++, TaskType.LABEL);
+            AssertTaskType(cnt++, TaskType.ASSIGNMENT);
+            AssertTaskType(cnt++, TaskType.LABEL);
+        }
     }
 }

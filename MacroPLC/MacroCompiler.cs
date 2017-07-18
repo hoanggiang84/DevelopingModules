@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using HPGCodeValidation;
 using HPMacroCommon;
-using HPMacroFunctions;
 using HPMacroTask;
 using MacroLexScn;
-using System.Linq;
 
 namespace MacroPLC
 {
@@ -51,8 +48,98 @@ namespace MacroPLC
         {
             var token_mgr = new TokenManager(firstLineTokens);
             token_mgr.IgnoreWhiteLookNextToken();
+
             token_mgr.Match(MacroKeywords.IF);
 
+            var condition_tokens = new List<Token>();
+            while (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
+                condition_tokens.Add(token_mgr.IgnoreWhiteGetNextToken());
+            compiledTasks.Add(new Task(TaskType.BOOLEAN_EVALUATE, condition_tokens));
+
+            var new_label = CreateNewLabel();
+            var new_label2 = CreateNewLabel();
+            compiledTasks.Add(new Task(TaskType.BRANCH_FALSE, new_label));
+
+            var next_line_num = 0;
+            var next_line = GetNextLine(out next_line_num);
+            while (next_line != null)
+            {
+                if(next_line.Type == Keyword.END_IF)
+                    break;
+
+                if(next_line.Type == Keyword.ELSE)
+                    break;
+
+                switch (next_line.Type)
+                {
+                    case Keyword.VAR:
+                        CreateAssignmentStatement(next_line.Tokens, line_num);
+                        break;
+                    case Keyword.GCODE:
+                        CreateGCodeStatement(next_line.Tokens, line_num);
+                        break;
+                    case Keyword.FUNCTION:
+                        CreateMacroBuiltInFunctionStatement(next_line.Tokens, line_num);
+                        break;
+                }
+                next_line = GetNextLine(out next_line_num);
+            }
+
+            if(next_line == null)
+                throw new Exception(string.Format("Expected '{0}'", MacroKeywords.ENDIF));
+
+            if(next_line.Type == Keyword.ELSE)
+            {
+                compiledTasks.Add(new Task(TaskType.BRANCH, new_label2));
+                compiledTasks.Add(new Task(TaskType.LABEL, new_label));
+            }
+
+            if(next_line.Type == Keyword.END_IF)
+            {
+                token_mgr = new TokenManager(next_line.Tokens);
+                token_mgr.IgnoreWhiteLookNextToken();
+                token_mgr.Match(MacroKeywords.ENDIF);
+                token_mgr.IgnoreWhiteLookNextToken();
+                token_mgr.Match(MacroKeywords.END_STATEMENT);
+                if (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
+                    throw new Exception(string.Format("Unexpected '{0}'", token_mgr.IgnoreWhiteLookNextToken().Text));
+                compiledTasks.Add(new Task(TaskType.LABEL, new_label));
+                return;
+            }
+
+            next_line = GetNextLine(out line_num);
+            while (next_line != null)
+            {
+                if (next_line.Type == Keyword.END_IF)
+                    break;
+
+                switch (next_line.Type)
+                {
+                    case Keyword.VAR:
+                        CreateAssignmentStatement(next_line.Tokens, line_num);
+                        break;
+                    case Keyword.GCODE:
+                        CreateGCodeStatement(next_line.Tokens, line_num);
+                        break;
+                    case Keyword.FUNCTION:
+                        CreateMacroBuiltInFunctionStatement(next_line.Tokens, line_num);
+                        break;
+                }
+
+                next_line = GetNextLine(out next_line_num);
+            }
+
+            if (next_line == null)
+                throw new Exception(string.Format("Expected '{0}'", MacroKeywords.ENDIF));
+
+            token_mgr = new TokenManager(next_line.Tokens);
+            token_mgr.IgnoreWhiteLookNextToken();
+            token_mgr.Match(MacroKeywords.ENDIF);
+            token_mgr.IgnoreWhiteLookNextToken();
+            token_mgr.Match(MacroKeywords.END_STATEMENT);
+            if(token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
+                throw new Exception(string.Format("Unexpected '{0}'", token_mgr.IgnoreWhiteLookNextToken().Text));
+            compiledTasks.Add(new Task(TaskType.LABEL, new_label));
         }
 
         private void CreateMacroBuiltInFunctionStatement(IEnumerable<Token> tokens, int line_num)

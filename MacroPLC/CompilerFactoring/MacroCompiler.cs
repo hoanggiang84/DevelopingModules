@@ -10,6 +10,18 @@ namespace MacroPLC
     {
         #region Private refactoring functions
 
+        private static int LCount;
+        private static string CreateNewLabel()
+        {
+            return string.Format("L{0}", LCount++);
+        }
+
+        private static string CreateProgramLabel(string label)
+        {
+            return "P" + label;
+        }
+
+
         private SourceLine GetNextLine(out int lineNum)
         {
             return sourceManager.GetNextLine(out lineNum);
