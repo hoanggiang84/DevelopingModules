@@ -1,4 +1,5 @@
-﻿using MacroPLC;
+﻿using HPMacroCommon;
+using MacroPLC;
 using NUnit.Framework;
 
 namespace MacroPLCTest
@@ -10,7 +11,7 @@ namespace MacroPLCTest
         {
             var src_line = new SourceLine("@10 = 1;", 1);
             Assert.AreEqual(1, src_line.LineNumber);
-            Assert.AreEqual(StatementType.ASSIGNMENT, src_line.Type);
+            Assert.AreEqual(Keyword.VAR, src_line.Type);
         }
          
     }

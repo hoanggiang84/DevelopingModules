@@ -3,7 +3,7 @@ namespace MacroPLC
 {
     public class SourceManager
     {
-        private List<string> sourceLines = new List<string>();
+        private List<SourceLine> sourceLines = new List<SourceLine>();
         public SourceManager(string source)
         {
             GetSourceLines(source);
@@ -12,20 +12,21 @@ namespace MacroPLC
         private void GetSourceLines(string source)
         {
             var reader = new SourceReader(source);
-            var lineContent = reader.ReadNextLine();
-            while (lineContent != null)
+            var line_content = reader.ReadNextLine();
+            var line_num = 0;
+            while (line_content != null)
             {
-                sourceLines.Add(lineContent);
-                lineContent = reader.ReadNextLine();
+                sourceLines.Add(new SourceLine(line_content, line_num++));
+                line_content = reader.ReadNextLine();
             }
         }
 
         public int CurrentLine { get; private set; }
         /// <summary>
-        /// Get current line string and increase index by 1
+        /// Get current line and increase index by 1
         /// </summary>
         /// <returns></returns>
-        private string GetCurrentLine()
+        private SourceLine GetCurrentLine()
         {
             if (CurrentLine >= sourceLines.Count)
             {
@@ -37,22 +38,22 @@ namespace MacroPLC
         }
 
         /// <summary>
-        /// Get next line string of source code
+        /// Get next source code line
         /// </summary>
         /// <param name="lineIndex">First line index is 0</param>
         /// <returns></returns>
-        public string GetNextLine(out int lineIndex)
+        public SourceLine GetNextLine(out int lineIndex)
         {
             lineIndex = CurrentLine;
             return GetCurrentLine();
         }
 
         /// <summary>
-        /// Get line string at specific index of source code
+        /// Get line at specific index of source code
         /// </summary>
         /// <param name="index">First line index is 0 </param>
         /// <returns></returns>
-        public string GetLineAt(int index)
+        public SourceLine GetLineAt(int index)
         {
             CurrentLine = index;
             return GetCurrentLine();

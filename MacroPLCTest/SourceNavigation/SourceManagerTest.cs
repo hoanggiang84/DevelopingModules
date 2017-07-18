@@ -21,7 +21,7 @@ namespace MacroPLCTest
             int index;
             var lineContent = sourceMgr.GetNextLine(out index);
             Assert.AreEqual(0,index);
-            Assert.AreEqual("one", lineContent);
+            Assert.AreEqual("one", lineContent.Text);
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace MacroPLCTest
         {
             var index = 2;
             var lineContent = sourceMgr.GetLineAt(index);
-            Assert.AreEqual("four", lineContent);
+            Assert.AreEqual("four", lineContent.Text);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace MacroPLCTest
             while (lineContent != null)
             {
                 Assert.AreEqual(count, index);
-                Assert.AreEqual(sourceLines[count], lineContent);
+                Assert.AreEqual(sourceLines[count], lineContent.Text);
                 lineContent = sourceMgr.GetNextLine(out index);
                 count++;
             }

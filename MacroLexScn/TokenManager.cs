@@ -74,7 +74,16 @@ namespace MacroLexScn
         /// </summary>
         public Token Match(string str)
         {
-            var next_token = tokens[CurrentIndex++];
+            Token next_token;
+            try
+            {
+                next_token = tokens[CurrentIndex++];
+            }
+            catch
+            {
+                throw new Exception(string.Format("Expected: '{0}'", str));
+            }
+
             if (next_token.Text != str)
                 throw new Exception(string.Format("Expected: '{0}'. But was: '{1}'", str, next_token.Text));
             return next_token;

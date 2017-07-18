@@ -20,6 +20,8 @@
         GOTO,
         SWITCH,
         END_SWITCH,
-        BREAK
+        BREAK,
+        CASE,
+        DEFAULT
     }
 }
