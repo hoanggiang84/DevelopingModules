@@ -26,6 +26,11 @@ namespace MacroPLCTest
             Assert.AreEqual(assertTask, tasks[taskIndex].Type);
         }
 
+        private void AssertLineNumber(int taskIndex, int lineNum)
+        {
+            Assert.AreEqual(lineNum, tasks[taskIndex].LineNumber);
+        }
+
         [Test]
         public void Compile_Assigment_returnAsignmentTask()
         {
@@ -71,9 +76,13 @@ namespace MacroPLCTest
                             "ENDIF; ";
             compileToTaskList(src_code);
             AssertTaskType(0, TaskType.BOOLEAN_EVALUATE);
+            AssertLineNumber(0, 0);
             AssertTaskType(1, TaskType.BRANCH_FALSE);
+            AssertLineNumber(1, 0);
             AssertTaskType(2, TaskType.BUILT_IN_FUNCTION);
+            AssertLineNumber(2, 1);
             AssertTaskType(3, TaskType.LABEL);
+            AssertLineNumber(3, 2);
         }
 
         [Test]
@@ -85,10 +94,15 @@ namespace MacroPLCTest
                             "ENDIF; ";
             compileToTaskList(src_code);
             AssertTaskType(0, TaskType.BOOLEAN_EVALUATE);
+            AssertLineNumber(0, 0);
             AssertTaskType(1, TaskType.BRANCH_FALSE);
+            AssertLineNumber(1, 0);
             AssertTaskType(2, TaskType.BUILT_IN_FUNCTION);
+            AssertLineNumber(2, 1);
             AssertTaskType(3, TaskType.ASSIGNMENT);
+            AssertLineNumber(3, 2);
             AssertTaskType(4, TaskType.LABEL);
+            AssertLineNumber(4, 3);
         }
 
         [Test]
@@ -102,12 +116,47 @@ namespace MacroPLCTest
             compileToTaskList(src_code);
             var cnt = 0;
             AssertTaskType(cnt++, TaskType.BOOLEAN_EVALUATE);
+            AssertLineNumber(0, 0);
             AssertTaskType(cnt++, TaskType.BRANCH_FALSE);
+            AssertLineNumber(1, 0);
             AssertTaskType(cnt++, TaskType.BUILT_IN_FUNCTION);
+            AssertLineNumber(2, 1);
             AssertTaskType(cnt++, TaskType.BRANCH);
+            AssertLineNumber(3, 2);
             AssertTaskType(cnt++, TaskType.LABEL);
+            AssertLineNumber(4, 2);
             AssertTaskType(cnt++, TaskType.ASSIGNMENT);
+            AssertLineNumber(5, 3);
             AssertTaskType(cnt++, TaskType.LABEL);
+            AssertLineNumber(6, 4);
+        }
+
+        [Test]
+        public void Compile_IfElseIfStatement_returnTaskList()
+        {
+            var src_code = "IF (2>4) \r\n" +
+                            "WAIT(); \r\n" +
+                            "ELSEIF (1>10) \r\n" +
+                            "@1 = 2; \r\n" +
+                            "ELSE \r\n" +
+                            "@1 = 1; \r\n" +
+                            "ENDIF; ";
+            compileToTaskList(src_code);
+            var cnt = 0;
+            AssertTaskType(cnt++, TaskType.BOOLEAN_EVALUATE);
+            AssertLineNumber(0, 0);
+            AssertTaskType(cnt++, TaskType.BRANCH_FALSE);
+            AssertLineNumber(1, 0);
+            AssertTaskType(cnt++, TaskType.BUILT_IN_FUNCTION);
+            AssertLineNumber(2, 1);
+            AssertTaskType(cnt++, TaskType.BRANCH);
+            AssertLineNumber(3, 2);
+            AssertTaskType(cnt++, TaskType.LABEL);
+            AssertLineNumber(4, 2);
+            AssertTaskType(cnt++, TaskType.ASSIGNMENT);
+            AssertLineNumber(5, 3);
+            AssertTaskType(cnt++, TaskType.LABEL);
+            AssertLineNumber(6, 4);
         }
     }
 }

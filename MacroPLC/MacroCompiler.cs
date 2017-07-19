@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HPMacroCommon;
 using HPMacroTask;
-using MacroLexScn;
 
 namespace MacroPLC
 {
@@ -19,72 +17,71 @@ namespace MacroPLC
         public void Compile()
         {
             compiledTasks.Clear();
-            CreateBlock();
+            create_block();
         }
 
         #region Grammar terms create methods
 
-        private void CreateBlock()
+        private void create_block()
         {
-            int line_num;
-            var line_content = LookNextLine(out line_num);
-            while (NotEndBlockLine(line_content))
+            var line_content = look_next_line();
+            while (not_end_block_line(line_content))
             {
                 switch (line_content.Type)
                 {
                     case Keyword.WHITE_SPACE:
                         break;
                     case Keyword.VAR:
-                        CreateAssignmentTask();
+                        create_assignment();
                         break;
                     case Keyword.GCODE:
-                        CreateGCodeTask();
+                        create_gcode();
                         break;
                     case Keyword.FUNCTION:
-                        CreateMacroBuiltInFunctionTask();
+                        create_built_in_function();
                         break;
                     case Keyword.IF:
-                        CreateIfStatement();
+                        create_if();
                         break;
                 }
 
-                line_content = LookNextLine(out line_num);
+                line_content = look_next_line();
             }
         }
 
-        private void CreateMacroBuiltInFunctionTask()
+        private void create_built_in_function()
         {
             var line_num = 0;
-            var tokens = GetNextLine(out line_num).Tokens;
-            CreateOneLineStatement(TaskType.BUILT_IN_FUNCTION, tokens,line_num);
+            var tokens = get_next_line(out line_num).Tokens;
+            create_single_line_statement(TaskType.BUILT_IN_FUNCTION, tokens,line_num);
         }
 
-        private void CreateGCodeTask()
+        private void create_gcode()
         {
             var line_num = 0;
-            var tokens = GetNextLine(out line_num).Tokens;
-            CreateOneLineStatement(TaskType.GCODE, tokens, line_num);
+            var tokens = get_next_line(out line_num).Tokens;
+            create_single_line_statement(TaskType.GCODE, tokens, line_num);
         }
 
-        private void CreateAssignmentTask()
+        private void create_assignment()
         {
             var line_num = 0;
-            var tokens = GetNextLine(out line_num).Tokens;
-            CreateOneLineStatement(TaskType.ASSIGNMENT, tokens, line_num);
+            var tokens = get_next_line(out line_num).Tokens;
+            create_single_line_statement(TaskType.ASSIGNMENT, tokens, line_num);
         }
 
-        private void CreateIfStatement()
+        private void create_if()
         {
             string new_label1;
             string new_label2;
 
-            CreateIfCondition(out new_label1, out new_label2);
+            create_if_condition(out new_label1, out new_label2);
 
-            CreateBlock();
+            create_block();
 
-            CreateElse(new_label1, new_label2);
+            create_else_block(new_label1, ref new_label2);
 
-            CreateEndIf(new_label1);
+            create_endif(new_label2);
         }
         
         #endregion

@@ -50,6 +50,10 @@ namespace MacroPLC
                     case TaskType.BUILT_IN_FUNCTION:
                         MacroStatement.CreateStatement(curTask.Type, curTask.Tokens, Variables).Execute();
                         return lineNumber;
+
+                    case TaskType.LABEL:
+                        break;
+                        
                 }
             }
             return INVALID_LINE_NUMBER;
