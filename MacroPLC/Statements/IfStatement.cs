@@ -1,13 +1,10 @@
 ﻿using System.Linq;
-using HPGCodeValidation;
 using HPMacroCommon;
 using HPMacroFunctions;
-using HPMacroTask;
 using HPMathExpression;
 using HPVariableRepository;
 using MacroLexScn;
 using System.Collections.Generic;
-using System;
 
 namespace MacroPLC
 {

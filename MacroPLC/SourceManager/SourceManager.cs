@@ -6,10 +6,10 @@ namespace MacroPLC
         private List<SourceLine> sourceLines = new List<SourceLine>();
         public SourceManager(string source)
         {
-            GetSourceLines(source);
+            ExtractSourceLines(source);
         }
 
-        private void GetSourceLines(string source)
+        private void ExtractSourceLines(string source)
         {
             var reader = new SourceReader(source);
             var line_content = reader.ReadNextLine();
@@ -22,6 +22,12 @@ namespace MacroPLC
         }
 
         public int CurrentLine { get; private set; }
+
+        public void Reset()
+        {
+            CurrentLine = 0;
+        }
+
         /// <summary>
         /// Get current line and increase index by 1
         /// </summary>
@@ -46,6 +52,21 @@ namespace MacroPLC
         {
             lineIndex = CurrentLine;
             return GetCurrentLine();
+        }
+
+        /// <summary>
+        /// Look current line and increase index by 1
+        /// </summary>
+        /// <returns></returns>
+        public SourceLine LookCurrentLine(out int lineIndex)
+        {
+            lineIndex = CurrentLine;
+            if (CurrentLine >= sourceLines.Count)
+            {
+                CurrentLine = sourceLines.Count;
+                return null;
+            }
+            return sourceLines[CurrentLine];
         }
 
         /// <summary>

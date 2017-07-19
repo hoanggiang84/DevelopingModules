@@ -3,6 +3,7 @@ using HPMacroCommon;
 using HPMacroFunctions;
 using MacroLexScn;
 using System.Collections.Generic;
+using UtilitiesVS2008WinCE;
 
 namespace MacroPLC
 {
@@ -31,7 +32,10 @@ namespace MacroPLC
         {
             var lex_scn = new MacroLexicalScanner(Text);
             var next_tkn = lex_scn.ScanNext();
-            
+
+            if (Text.IsNullOrWhite())
+                _type = Keyword.WHITE_SPACE;
+
             if(next_tkn.Type == TokenType.LOCAL_VAR
                 || next_tkn.Type == TokenType.GLOBAL_VAR)
             {

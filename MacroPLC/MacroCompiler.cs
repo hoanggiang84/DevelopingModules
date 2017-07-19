@@ -19,33 +19,41 @@ namespace MacroPLC
         public void Compile()
         {
             compiledTasks.Clear();
+            CreateBlock();
+        }
+
+        private void CreateBlock()
+        {
             int line_num;
-            var line_content = GetNextLine(out line_num);
-            while (line_content != null)
+            var line_content = LookNextLine(out line_num);
+            while (NotEndBlockLine(line_content))
             {
-                var line_token = line_content.Tokens;
                 switch (line_content.Type)
                 {
+                    case Keyword.WHITE_SPACE:
+                        break;
                     case Keyword.VAR:
-                        CreateAssignmentStatement(line_token, line_num);
+                        CreateAssignmentStatement();
                         break;
                     case Keyword.GCODE:
-                        CreateGCodeStatement(line_token, line_num);
+                        CreateGCodeStatement();
                         break;
                     case Keyword.FUNCTION:
-                        CreateMacroBuiltInFunctionStatement(line_token, line_num);
+                        CreateMacroBuiltInFunctionStatement();
                         break;
                     case Keyword.IF:
-                        CreateIfStatementTasks(line_token, line_num);
+                        CreateIfStatementTasks();
                         break;
                 }
 
-                line_content = GetNextLine(out line_num);
+                line_content = LookNextLine(out line_num);
             }
         }
 
-        private void CreateIfStatementTasks(IEnumerable<Token> firstLineTokens, int line_num)
+        private void CreateIfStatementTasks()
         {
+            var line_num = 0;
+            var firstLineTokens = GetNextLine(out line_num).Tokens;
             var token_mgr = new TokenManager(firstLineTokens);
             token_mgr.IgnoreWhiteLookNextToken();
 
@@ -60,31 +68,10 @@ namespace MacroPLC
             var new_label2 = CreateNewLabel();
             compiledTasks.Add(new Task(TaskType.BRANCH_FALSE, new_label));
 
+            CreateBlock();
+
             var next_line_num = 0;
-            var next_line = GetNextLine(out next_line_num);
-            while (next_line != null)
-            {
-                if(next_line.Type == Keyword.END_IF)
-                    break;
-
-                if(next_line.Type == Keyword.ELSE)
-                    break;
-
-                switch (next_line.Type)
-                {
-                    case Keyword.VAR:
-                        CreateAssignmentStatement(next_line.Tokens, line_num);
-                        break;
-                    case Keyword.GCODE:
-                        CreateGCodeStatement(next_line.Tokens, line_num);
-                        break;
-                    case Keyword.FUNCTION:
-                        CreateMacroBuiltInFunctionStatement(next_line.Tokens, line_num);
-                        break;
-                }
-                next_line = GetNextLine(out next_line_num);
-            }
-
+            var next_line = LookNextLine(out next_line_num);
             if(next_line == null)
                 throw new Exception(string.Format("Expected '{0}'", MacroKeywords.ENDIF));
 
@@ -107,28 +94,9 @@ namespace MacroPLC
                 return;
             }
 
-            next_line = GetNextLine(out line_num);
-            while (next_line != null)
-            {
-                if (next_line.Type == Keyword.END_IF)
-                    break;
-
-                switch (next_line.Type)
-                {
-                    case Keyword.VAR:
-                        CreateAssignmentStatement(next_line.Tokens, line_num);
-                        break;
-                    case Keyword.GCODE:
-                        CreateGCodeStatement(next_line.Tokens, line_num);
-                        break;
-                    case Keyword.FUNCTION:
-                        CreateMacroBuiltInFunctionStatement(next_line.Tokens, line_num);
-                        break;
-                }
-
-                next_line = GetNextLine(out next_line_num);
-            }
-
+            CreateBlock();
+            next_line_num = 0;
+            next_line = LookNextLine(out next_line_num);
             if (next_line == null)
                 throw new Exception(string.Format("Expected '{0}'", MacroKeywords.ENDIF));
 
@@ -142,18 +110,24 @@ namespace MacroPLC
             compiledTasks.Add(new Task(TaskType.LABEL, new_label));
         }
 
-        private void CreateMacroBuiltInFunctionStatement(IEnumerable<Token> tokens, int line_num)
+        private void CreateMacroBuiltInFunctionStatement()
         {
+            var line_num = 0;
+            var tokens = GetNextLine(out line_num).Tokens;
             CreateOneLineStatement(TaskType.BUILT_IN_FUNCTION, tokens,line_num);
         }
 
-        private void CreateGCodeStatement(IEnumerable<Token> tokens, int line_num)
+        private void CreateGCodeStatement()
         {
+            var line_num = 0;
+            var tokens = GetNextLine(out line_num).Tokens;
             CreateOneLineStatement(TaskType.GCODE, tokens, line_num);
         }
 
-        private void CreateAssignmentStatement(IEnumerable<Token> tokens, int line_num)
+        private void CreateAssignmentStatement()
         {
+            var line_num = 0;
+            var tokens = GetNextLine(out line_num).Tokens;
             CreateOneLineStatement(TaskType.ASSIGNMENT, tokens, line_num);
         }
 

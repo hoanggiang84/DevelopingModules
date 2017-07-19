@@ -27,6 +27,11 @@ namespace MacroPLC
             return sourceManager.GetNextLine(out lineNum);
         }
 
+        private SourceLine LookNextLine(out int lineNum)
+        {
+            return sourceManager.LookCurrentLine(out lineNum);
+        }
+
         private static List<Token> ExtractStatementTokens(IEnumerable<Token> tokens)
         {
             // Skip last end statement token ';'
@@ -62,5 +67,27 @@ namespace MacroPLC
                 || tok.Type == TokenType.LOCAL_VAR;
         }
         #endregion
+
+        private bool NotEndBlockLine(SourceLine lineContent)
+        {
+            if (lineContent == null)
+                return false;
+
+            switch (lineContent.Type)
+            {
+                case Keyword.END:
+                case Keyword.ELSE:
+                case Keyword.END_IF:
+                case Keyword.END_WHILE:
+                case Keyword.UNTIL:
+                case Keyword.END_FOR:
+                case Keyword.CASE:
+                case Keyword.DEFAULT:
+                case Keyword.END_SWITCH:
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
