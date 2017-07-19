@@ -22,6 +22,8 @@ namespace MacroPLC
             CreateBlock();
         }
 
+        #region Grammar terms create methods
+
         private void CreateBlock()
         {
             int line_num;
@@ -33,16 +35,16 @@ namespace MacroPLC
                     case Keyword.WHITE_SPACE:
                         break;
                     case Keyword.VAR:
-                        CreateAssignmentStatement();
+                        CreateAssignmentTask();
                         break;
                     case Keyword.GCODE:
-                        CreateGCodeStatement();
+                        CreateGCodeTask();
                         break;
                     case Keyword.FUNCTION:
-                        CreateMacroBuiltInFunctionStatement();
+                        CreateMacroBuiltInFunctionTask();
                         break;
                     case Keyword.IF:
-                        CreateIfStatementTasks();
+                        CreateIfStatement();
                         break;
                 }
 
@@ -50,87 +52,41 @@ namespace MacroPLC
             }
         }
 
-        private void CreateIfStatementTasks()
-        {
-            var line_num = 0;
-            var firstLineTokens = GetNextLine(out line_num).Tokens;
-            var token_mgr = new TokenManager(firstLineTokens);
-            token_mgr.IgnoreWhiteLookNextToken();
-
-            token_mgr.Match(MacroKeywords.IF);
-
-            var condition_tokens = new List<Token>();
-            while (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
-                condition_tokens.Add(token_mgr.IgnoreWhiteGetNextToken());
-            compiledTasks.Add(new Task(TaskType.BOOLEAN_EVALUATE, condition_tokens));
-
-            var new_label = CreateNewLabel();
-            var new_label2 = CreateNewLabel();
-            compiledTasks.Add(new Task(TaskType.BRANCH_FALSE, new_label));
-
-            CreateBlock();
-
-            var next_line_num = 0;
-            var next_line = LookNextLine(out next_line_num);
-            if(next_line == null)
-                throw new Exception(string.Format("Expected '{0}'", MacroKeywords.ENDIF));
-
-            if(next_line.Type == Keyword.ELSE)
-            {
-                compiledTasks.Add(new Task(TaskType.BRANCH, new_label2));
-                compiledTasks.Add(new Task(TaskType.LABEL, new_label));
-            }
-
-            if(next_line.Type == Keyword.END_IF)
-            {
-                token_mgr = new TokenManager(next_line.Tokens);
-                token_mgr.IgnoreWhiteLookNextToken();
-                token_mgr.Match(MacroKeywords.ENDIF);
-                token_mgr.IgnoreWhiteLookNextToken();
-                token_mgr.Match(MacroKeywords.END_STATEMENT);
-                if (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
-                    throw new Exception(string.Format("Unexpected '{0}'", token_mgr.IgnoreWhiteLookNextToken().Text));
-                compiledTasks.Add(new Task(TaskType.LABEL, new_label));
-                return;
-            }
-
-            CreateBlock();
-            next_line_num = 0;
-            next_line = LookNextLine(out next_line_num);
-            if (next_line == null)
-                throw new Exception(string.Format("Expected '{0}'", MacroKeywords.ENDIF));
-
-            token_mgr = new TokenManager(next_line.Tokens);
-            token_mgr.IgnoreWhiteLookNextToken();
-            token_mgr.Match(MacroKeywords.ENDIF);
-            token_mgr.IgnoreWhiteLookNextToken();
-            token_mgr.Match(MacroKeywords.END_STATEMENT);
-            if(token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
-                throw new Exception(string.Format("Unexpected '{0}'", token_mgr.IgnoreWhiteLookNextToken().Text));
-            compiledTasks.Add(new Task(TaskType.LABEL, new_label));
-        }
-
-        private void CreateMacroBuiltInFunctionStatement()
+        private void CreateMacroBuiltInFunctionTask()
         {
             var line_num = 0;
             var tokens = GetNextLine(out line_num).Tokens;
             CreateOneLineStatement(TaskType.BUILT_IN_FUNCTION, tokens,line_num);
         }
 
-        private void CreateGCodeStatement()
+        private void CreateGCodeTask()
         {
             var line_num = 0;
             var tokens = GetNextLine(out line_num).Tokens;
             CreateOneLineStatement(TaskType.GCODE, tokens, line_num);
         }
 
-        private void CreateAssignmentStatement()
+        private void CreateAssignmentTask()
         {
             var line_num = 0;
             var tokens = GetNextLine(out line_num).Tokens;
             CreateOneLineStatement(TaskType.ASSIGNMENT, tokens, line_num);
         }
 
-     
+        private void CreateIfStatement()
+        {
+            string new_label1;
+            string new_label2;
+
+            CreateIfCondition(out new_label1, out new_label2);
+
+            CreateBlock();
+
+            CreateElse(new_label1, new_label2);
+
+            CreateEndIf(new_label1);
+        }
+        
+        #endregion
     }
 }
