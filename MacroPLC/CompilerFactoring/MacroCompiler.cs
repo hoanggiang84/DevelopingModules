@@ -45,11 +45,9 @@ namespace MacroPLC
                 next_token = token_mgr.IgnoreWhiteLookNextToken();
             }
 
-            token_mgr.Match(MacroKeywords.END_STATEMENT);
-
-            if (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
-                throw new Exception(string.Format("Unexpected string '{0}'",
-                    token_mgr.IgnoreWhiteGetNextToken().Text));
+            match_next_token(MacroKeywords.END_STATEMENT, token_mgr);
+            
+            verify_next_end_token(token_mgr);
 
             return tokenList;
         }
@@ -57,12 +55,13 @@ namespace MacroPLC
         private void verify_next_line_not_null(Keyword expected)
         {
             if (look_next_line() == null)
-                throw new Exception(string.Format("Expected '{0}'", expected));
+                throw new Exception(string.Format("Expected '{0}' statement", expected));
         }
 
         #endregion
         
         #region Block
+
         private static bool not_end_block_line(SourceLine lineContent)
         {
             if (lineContent == null)
@@ -85,6 +84,7 @@ namespace MacroPLC
 
             return true;
         }
+
         #endregion
 
         #region If
@@ -95,29 +95,27 @@ namespace MacroPLC
             var if_line_num = 0;
             var if_line = get_next_line(out if_line_num);
 
-            create_if_condition(if_line, if_line_num);
+            create_if_condition(if_line, if_line_num, out if_false_label);
 
-            create_branch_false(if_line_num, out if_false_label);
+            create_branch_false(if_line_num, if_false_label);
 
             create_block();
         }
 
-        private void create_if_condition(SourceLine if_line, int if_line_num)
+        private void create_if_condition(SourceLine if_line, int if_line_num, out string if_false_label)
         {
-            // IF
-            var token_mgr = new TokenManager(if_line.Tokens);
-            match_next_token(MacroKeywords.IF, token_mgr);
-
-            // Condition
-            var condition_tokens = new List<Token>();
-            condition_tokens.AddRange(get_remain_tokens(token_mgr));
-            compiledTasks.Add(Task.BoolCondition(condition_tokens, if_line_num));
+            create_condition(MacroKeywords.IF, if_line, if_line_num);
+            if_false_label = create_new_label();
         }
 
-        private void create_branch_false(int line_num, out string if_false_label)
+        private void create_branch_false(string label)
         {
-            if_false_label = create_new_label();
-            compiledTasks.Add(Task.BranchIfFalse(if_false_label, line_num));
+            compiledTasks.Add(Task.BranchIfFalse(label));
+        }
+
+        private void create_branch_false(int line_num, string false_label)
+        {
+            compiledTasks.Add(Task.BranchIfFalse(false_label, line_num));
         }
 
         // ELSE CLAUSE
@@ -144,9 +142,9 @@ namespace MacroPLC
             compiledTasks.Add(Task.Branch(label));
         }
 
-        private void create_post_label(string ifFalseLabel, int line_num)
+        private void create_post_label(string label, int line_num)
         {
-            compiledTasks.Add(Task.PostLabel(ifFalseLabel, line_num));
+            compiledTasks.Add(Task.PostLabel(label, line_num));
         }
         
         // END IF
@@ -194,20 +192,16 @@ namespace MacroPLC
         {
             while (look_next_line().Type == Keyword.ELSEIF)
             {
+                create_branch_label(end_label);
+
                 var line_num = 0;
                 var elseif_line = get_next_line(out line_num);
-
-                create_branch_label(end_label);
                 create_post_label(if_false_label, line_num);
 
-                var token_mgr = new TokenManager(elseif_line.Tokens);
-                match_next_token(MacroKeywords.ELSEIF, token_mgr);
-
-                var condition_tokens = new List<Token>();
-                condition_tokens.AddRange(get_remain_tokens(token_mgr));
-                compiledTasks.Add(Task.BoolCondition(condition_tokens, line_num));
-
-                create_branch_false(line_num, out if_false_label);
+                create_condition(MacroKeywords.ELSEIF, elseif_line, line_num);
+                
+                if_false_label = create_new_label();
+                create_branch_false(line_num, if_false_label);
 
                 create_block();
             }
@@ -215,6 +209,28 @@ namespace MacroPLC
 
         #endregion
 
+        #region While
 
+        private void create_while_condition(string while_label)
+        {
+            var line_num = 0;
+            var while_line = get_next_line(out line_num);
+
+            create_post_label(while_label, line_num);
+
+            create_condition(MacroKeywords.WHILE, while_line, line_num);
+        }
+
+        private void create_condition(string keyword, SourceLine while_line, int line_num)
+        {
+            var token_mgr = new TokenManager(while_line.Tokens);
+            match_next_token(keyword, token_mgr);
+
+            var condition_tokens = new List<Token>();
+            condition_tokens.AddRange(get_remain_tokens(token_mgr));
+            compiledTasks.Add(Task.BoolCondition(condition_tokens, line_num));
+        }
+
+        #endregion
     }
 }

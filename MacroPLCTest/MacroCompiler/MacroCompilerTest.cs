@@ -37,7 +37,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_Assigment_returnAsignmentTask()
+        public void Compile_assigment_returnAsignmentTask()
         {
             compileToTaskList("@10 = 12.1;");
             AssertTasksCount(1);
@@ -45,7 +45,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_GCode_returnGCodeTask()
+        public void Compile_gcode_returnGCodeTask()
         {
             compileToTaskList("G01 X1 Y10 Z14 F11;");
             AssertTasksCount(1);
@@ -53,7 +53,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_MacroFunction_returnFunctionTask()
+        public void Compile_macroFunction_returnFunctionTask()
         {
             compileToTaskList("WAIT();");
             AssertTasksCount(1);
@@ -61,7 +61,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_ManySimpleStatements_returnTaskList()
+        public void Compile_manySimpleStatements_returnTaskList()
         {
             compileToTaskList(
                 "@10 = 12.1;\r\n" +
@@ -74,7 +74,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_IfStatement_returnTaskList()
+        public void Compile_if_returnTaskList()
         {
             var src_code = "IF (2<4) \r\n" +
                             "WAIT(); \r\n" +
@@ -91,7 +91,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_IfStatementWithManyStatemets_returnTaskList()
+        public void Compile_ifWithManyStatemets_returnTaskList()
         {
             var src_code = "IF (2<4) \r\n" +
                             "WAIT(); \r\n" +
@@ -111,7 +111,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_IfElseStatement_returnTaskList()
+        public void Compile_ifElseStatement_returnTaskList()
         {
             var src_code = "IF (2>4) \r\n" +
                             "WAIT(); \r\n" +
@@ -138,7 +138,7 @@ namespace MacroPLCTest
         }
 
         [Test]
-        public void Compile_IfElseIfStatement_returnTaskList()
+        public void Compile_ifElseIfStatement_returnTaskList()
         {
             var src_code = "IF (2>4) \r\n" +
                             "WAIT(); \r\n" +
@@ -157,11 +157,47 @@ namespace MacroPLCTest
             AssertLineNumber(2, 1);
             AssertTaskType(cnt++, TaskType.BRANCH);
             AssertTaskType(cnt++, TaskType.LABEL);
+            AssertString(4, "L1");
             AssertLineNumber(4, 2);
+            AssertTaskType(cnt++, TaskType.BOOLEAN_EVALUATE);
+            AssertLineNumber(5, 2);
+            AssertTaskType(cnt++, TaskType.BRANCH_FALSE);
+            AssertLineNumber(6, 2);
             AssertTaskType(cnt++, TaskType.ASSIGNMENT);
-            AssertLineNumber(5, 3);
+            AssertLineNumber(7, 3);
+            AssertTaskType(cnt++, TaskType.BRANCH);
             AssertTaskType(cnt++, TaskType.LABEL);
-            AssertLineNumber(6, 4);
+            AssertLineNumber(9, 4);
+            AssertString(9, "L2");
+            AssertTaskType(cnt++, TaskType.ASSIGNMENT);
+            AssertLineNumber(10, 5);
+            AssertTaskType(cnt++, TaskType.LABEL);
+            AssertLineNumber(11, 6);
+            AssertString(11, "L0");
+        }
+
+        [Test]
+        public void Compile_while_returnWhileTasks()
+        {
+            var src_code = "WHILE 1>0\r\n" +
+                           "@2 = 1;\r\n" +
+                           "WAIT();\r\n" +
+                           "ENDWHILE;";
+            compileToTaskList(src_code);
+            var cnt = 0;
+            AssertTaskType(cnt++, TaskType.LABEL);
+            AssertLineNumber(0, 0);
+            AssertTaskType(cnt++, TaskType.BOOLEAN_EVALUATE);
+            AssertLineNumber(1, 0);
+            AssertTaskType(cnt++, TaskType.BRANCH_FALSE);
+            AssertLineNumber(2, 0);
+            AssertTaskType(cnt++, TaskType.ASSIGNMENT);
+            AssertLineNumber(3, 1);
+            AssertTaskType(cnt++, TaskType.BUILT_IN_FUNCTION);
+            AssertLineNumber(4, 2);
+            AssertTaskType(cnt++, TaskType.BRANCH);
+            AssertTaskType(cnt++, TaskType.LABEL);
+            AssertLineNumber(6, 3);
         }
     }
 }
