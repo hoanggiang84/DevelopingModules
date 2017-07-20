@@ -64,6 +64,9 @@
       <Name>HPMacroLexScn</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

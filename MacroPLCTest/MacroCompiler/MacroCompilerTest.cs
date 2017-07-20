@@ -31,6 +31,11 @@ namespace MacroPLCTest
             Assert.AreEqual(lineNum, tasks[taskIndex].LineNumber);
         }
 
+        private void AssertString(int index, string expect)
+        {
+            Assert.AreEqual(expect, tasks[index].Label);
+        }
+
         [Test]
         public void Compile_Assigment_returnAsignmentTask()
         {
@@ -122,12 +127,13 @@ namespace MacroPLCTest
             AssertTaskType(cnt++, TaskType.BUILT_IN_FUNCTION);
             AssertLineNumber(2, 1);
             AssertTaskType(cnt++, TaskType.BRANCH);
-            AssertLineNumber(3, 2);
             AssertTaskType(cnt++, TaskType.LABEL);
+            AssertString(4, "L1");
             AssertLineNumber(4, 2);
             AssertTaskType(cnt++, TaskType.ASSIGNMENT);
             AssertLineNumber(5, 3);
             AssertTaskType(cnt++, TaskType.LABEL);
+            AssertString(6, "L0");
             AssertLineNumber(6, 4);
         }
 
@@ -150,7 +156,6 @@ namespace MacroPLCTest
             AssertTaskType(cnt++, TaskType.BUILT_IN_FUNCTION);
             AssertLineNumber(2, 1);
             AssertTaskType(cnt++, TaskType.BRANCH);
-            AssertLineNumber(3, 2);
             AssertTaskType(cnt++, TaskType.LABEL);
             AssertLineNumber(4, 2);
             AssertTaskType(cnt++, TaskType.ASSIGNMENT);

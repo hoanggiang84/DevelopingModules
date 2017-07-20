@@ -54,14 +54,7 @@ namespace MacroPLC
             return tokenList;
         }
 
-        private void create_single_line_statement(TaskType task_type, IEnumerable<Token> tokens, int line_num)
-        {
-            var funcTask = new Task(task_type, extract_statement_tokens(tokens));
-            funcTask.SetLineNumber(line_num);
-            compiledTasks.Add(funcTask);
-        }
-
-        private void check_if_next_line_null(Keyword expected)
+        private void verify_next_line_not_null(Keyword expected)
         {
             if (look_next_line() == null)
                 throw new Exception(string.Format("Expected '{0}'", expected));
@@ -96,90 +89,132 @@ namespace MacroPLC
 
         #region If
 
-        private void create_endif(string new_label1)
+        // IF CLAUSE
+        private void create_if_clause(string end_label, out string if_false_label)
         {
-            verify_next_source_line(Keyword.END_IF);
-            var line_num = 0;
-            get_next_line(out line_num);
-            var label_task = new Task(TaskType.LABEL, new_label1);
-            label_task.SetLineNumber(line_num);
-            compiledTasks.Add(label_task);
-        }
+            var if_line_num = 0;
+            var if_line = get_next_line(out if_line_num);
 
-        private void verify_next_source_line(Keyword line_type)
-        {
-            check_if_next_line_null(line_type);
+            create_if_condition(if_line, if_line_num);
 
-            var token_mgr = new TokenManager(look_next_line().Tokens);
-            token_mgr.IgnoreWhiteLookNextToken();
-            token_mgr.Match(MacroKeywords.GetKeywordString(line_type));
-
-            token_mgr.IgnoreWhiteLookNextToken();
-            token_mgr.Match(MacroKeywords.END_STATEMENT);
-
-            if (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
-                throw new Exception(string.Format("Unexpected '{0}'", token_mgr.IgnoreWhiteLookNextToken().Text));
-        }
-
-        private void create_else_block(string new_label1, ref string new_label2)
-        {
-            check_if_next_line_null(Keyword.END_IF);
-
-            if (look_next_line().Type == Keyword.ELSE)
-            {
-                create_else(new_label1, out new_label2);
-            }
-            else if (look_next_line().Type == Keyword.END_IF)
-            {
-                return;
-            }
+            create_branch_false(if_line_num, out if_false_label);
 
             create_block();
         }
 
-        private void create_else(string new_label1, out string new_label2)
+        private void create_if_condition(SourceLine if_line, int if_line_num)
         {
-            new_label2 = create_new_label();
-            var next_line_num = 0;
-            get_next_line(out next_line_num);
-
-            var branch_task = new Task(TaskType.BRANCH, new_label2);
-            branch_task.SetLineNumber(next_line_num);
-            compiledTasks.Add(branch_task);
-
-            var label_task = new Task(TaskType.LABEL, new_label1);
-            label_task.SetLineNumber(next_line_num);
-            compiledTasks.Add(label_task);
-        }
-
-        private void create_if_condition(out string label1, out string label2)
-        {
-            var next_line_num = 0;
-            var next_line = get_next_line(out next_line_num);
-            
-            // If
-            var token_mgr = new TokenManager(next_line.Tokens);
-            token_mgr.IgnoreWhiteLookNextToken();
-            token_mgr.Match(MacroKeywords.IF);
+            // IF
+            var token_mgr = new TokenManager(if_line.Tokens);
+            match_next_token(MacroKeywords.IF, token_mgr);
 
             // Condition
             var condition_tokens = new List<Token>();
+            condition_tokens.AddRange(get_remain_tokens(token_mgr));
+            compiledTasks.Add(Task.BoolCondition(condition_tokens, if_line_num));
+        }
+
+        private void create_branch_false(int line_num, out string if_false_label)
+        {
+            if_false_label = create_new_label();
+            compiledTasks.Add(Task.BranchIfFalse(if_false_label, line_num));
+        }
+
+        // ELSE CLAUSE
+        private void create_else_clause(string end_label, string if_false_label)
+        {
+            verify_next_line_not_null(Keyword.END_IF);
+
+            if (look_next_line().Type != Keyword.ELSE) return;
+
+            create_else(end_label, if_false_label);
+            create_block();
+        }
+
+        private void create_else(string end_label, string if_false_label)
+        {
+            var next_line_num = 0;
+            get_next_line(out next_line_num);
+            create_branch_label(end_label);
+            create_post_label(if_false_label, next_line_num);
+        }
+
+        private void create_branch_label(string label)
+        {
+            compiledTasks.Add(Task.Branch(label));
+        }
+
+        private void create_post_label(string ifFalseLabel, int line_num)
+        {
+            compiledTasks.Add(Task.PostLabel(ifFalseLabel, line_num));
+        }
+        
+        // END IF
+        private void create_endif(string label)
+        {
+            verify_next_source_line(Keyword.END_IF);
+            var line_num = 0;
+            get_next_line(out line_num);
+            compiledTasks.Add(Task.PostLabel(label, line_num));
+        }
+
+        private static IEnumerable<Token> get_remain_tokens( TokenManager token_mgr)
+        {
+            var condition_tokens = new List<Token>();
             while (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
                 condition_tokens.Add(token_mgr.IgnoreWhiteGetNextToken());
+            return condition_tokens;
+        }
 
-            var condtion_task = new Task(TaskType.BOOLEAN_EVALUATE, condition_tokens);
-            condtion_task.SetLineNumber(next_line_num);
-            compiledTasks.Add(condtion_task);
+        private static void match_next_token(string expect_str, TokenManager token_mgr)
+        {
+            token_mgr.IgnoreWhiteLookNextToken();
+            token_mgr.Match(expect_str);
+        }
 
-            // Branch label1 if condition is false
-            label1 = create_new_label();
-            label2 = label1;
-            var label_task = new Task(TaskType.BRANCH_FALSE, label1);
-            label_task.SetLineNumber(next_line_num);
-            compiledTasks.Add(label_task);
+        private static void verify_next_end_token(TokenManager token_mgr)
+        {
+            if (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
+                throw new Exception(string.Format("Unexpected string '{0}'",
+                    token_mgr.IgnoreWhiteLookNextToken().Text));
+        }
+
+        private void verify_next_source_line(Keyword line_type)
+        {
+            verify_next_line_not_null(line_type);
+
+            var token_mgr = new TokenManager(look_next_line().Tokens);
+            match_next_token(MacroKeywords.GetKeywordString(line_type), token_mgr);
+            match_next_token(MacroKeywords.END_STATEMENT, token_mgr);
+
+            verify_next_end_token(token_mgr);
+        }
+
+        private void create_elseif_clause(string end_label, ref string if_false_label)
+        {
+            while (look_next_line().Type == Keyword.ELSEIF)
+            {
+                var line_num = 0;
+                var elseif_line = get_next_line(out line_num);
+
+                create_branch_label(end_label);
+                create_post_label(if_false_label, line_num);
+
+                var token_mgr = new TokenManager(elseif_line.Tokens);
+                match_next_token(MacroKeywords.ELSEIF, token_mgr);
+
+                var condition_tokens = new List<Token>();
+                condition_tokens.AddRange(get_remain_tokens(token_mgr));
+                compiledTasks.Add(Task.BoolCondition(condition_tokens, line_num));
+
+                create_branch_false(line_num, out if_false_label);
+
+                create_block();
+            }
         }
 
         #endregion
+
 
     }
 }

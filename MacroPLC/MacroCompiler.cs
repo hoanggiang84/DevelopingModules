@@ -17,6 +17,7 @@ namespace MacroPLC
         public void Compile()
         {
             compiledTasks.Clear();
+            _label_count = 0;
             create_block();
         }
 
@@ -53,35 +54,35 @@ namespace MacroPLC
         {
             var line_num = 0;
             var tokens = get_next_line(out line_num).Tokens;
-            create_single_line_statement(TaskType.BUILT_IN_FUNCTION, tokens,line_num);
+            compiledTasks.Add(Task.CreateBuiltInFunctionTask(extract_statement_tokens(tokens), line_num));
         }
 
         private void create_gcode()
         {
             var line_num = 0;
             var tokens = get_next_line(out line_num).Tokens;
-            create_single_line_statement(TaskType.GCODE, tokens, line_num);
+            compiledTasks.Add(Task.CreateGCodeTask(extract_statement_tokens(tokens), line_num));
         }
 
         private void create_assignment()
         {
             var line_num = 0;
             var tokens = get_next_line(out line_num).Tokens;
-            create_single_line_statement(TaskType.ASSIGNMENT, tokens, line_num);
+            compiledTasks.Add(Task.CreateAssignmentTask(extract_statement_tokens(tokens),line_num));
         }
 
         private void create_if()
         {
-            string new_label1;
-            string new_label2;
+            var end_label = create_new_label();
 
-            create_if_condition(out new_label1, out new_label2);
+            string if_false_label;
+            create_if_clause(end_label, out if_false_label);
 
-            create_block();
+            create_elseif_clause(end_label, ref if_false_label);
 
-            create_else_block(new_label1, ref new_label2);
+            create_else_clause(end_label, if_false_label);
 
-            create_endif(new_label2);
+            create_endif(end_label);
         }
         
         #endregion
