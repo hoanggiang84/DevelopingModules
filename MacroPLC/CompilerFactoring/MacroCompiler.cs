@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HPMacroCommon;
 using HPMacroTask;
 using MacroLexScn;
+using UtilitiesVS2008WinCE;
 
 namespace MacroPLC
 {
@@ -16,10 +17,10 @@ namespace MacroPLC
             return string.Format("L{0}", _label_count++);
         }
 
-        //private static string create_program_label(string label)
-        //{
-        //    return "P" + label;
-        //}
+        private static string create_program_label(string label)
+        {
+            return "P" + label;
+        }
 
         private SourceLine get_next_line(out int lineNum)
         {
@@ -70,6 +71,7 @@ namespace MacroPLC
             switch (lineContent.Type)
             {
                 case Keyword.END:
+                case Keyword.END_LOOP:
                 case Keyword.ELSEIF:
                 case Keyword.ELSE:
                 case Keyword.END_IF:
@@ -90,22 +92,22 @@ namespace MacroPLC
         #region If
 
         // IF CLAUSE
-        private void create_if_clause(string end_label, out string if_false_label)
+        private void create_if_clause(string end_loop_label, out string if_false_label)
         {
             var if_line_num = 0;
             var if_line = get_next_line(out if_line_num);
+            if_false_label = create_new_label();
 
-            create_if_condition(if_line, if_line_num, out if_false_label);
+            create_if_condition(if_line, if_line_num);
 
             create_branch_false(if_line_num, if_false_label);
 
-            create_block();
+            create_block(end_loop_label);
         }
 
-        private void create_if_condition(SourceLine if_line, int if_line_num, out string if_false_label)
+        private void create_if_condition(SourceLine if_line, int if_line_num)
         {
             create_condition(MacroKeywords.IF, if_line, if_line_num);
-            if_false_label = create_new_label();
         }
 
         private void create_branch_false(string label)
@@ -118,23 +120,53 @@ namespace MacroPLC
             compiledTasks.Add(Task.BranchIfFalse(false_label, line_num));
         }
 
+        // ELSEIF CLAUSE
+        private void create_elseif_clause(string end_loop_label, ref string if_false_label, out string end_label)
+        {
+            if(look_next_line().Type != Keyword.ELSEIF)
+            {
+                end_label = string.Empty;
+                return;
+            }
+
+            end_label = create_new_label();
+            while (look_next_line().Type == Keyword.ELSEIF)
+            {
+                create_branch_label(end_label);
+
+                var line_num = 0;
+                var elseif_line = get_next_line(out line_num);
+                create_post_label(if_false_label, line_num);
+
+                create_condition(MacroKeywords.ELSEIF, elseif_line, line_num);
+
+                if_false_label = create_new_label();
+                create_branch_false(line_num, if_false_label);
+
+                create_block(end_loop_label);
+            }
+        }
+
         // ELSE CLAUSE
-        private void create_else_clause(string end_label, string if_false_label)
+        private void create_else_clause(string end_loop_label, string end_label, ref string if_false_label)
         {
             verify_next_line_not_null(Keyword.END_IF);
 
-            if (look_next_line().Type != Keyword.ELSE) return;
+            if (look_next_line().Type != Keyword.ELSE) 
+                return;
 
-            create_else(end_label, if_false_label);
-            create_block();
-        }
-
-        private void create_else(string end_label, string if_false_label)
-        {
             var next_line_num = 0;
             get_next_line(out next_line_num);
+
+            if(end_label.IsNullOrWhite())
+                end_label = create_new_label();
+
             create_branch_label(end_label);
+
             create_post_label(if_false_label, next_line_num);
+
+            create_block(end_loop_label);
+            if_false_label = end_label;
         }
 
         private void create_branch_label(string label)
@@ -188,24 +220,7 @@ namespace MacroPLC
             verify_next_end_token(token_mgr);
         }
 
-        private void create_elseif_clause(string end_label, ref string if_false_label)
-        {
-            while (look_next_line().Type == Keyword.ELSEIF)
-            {
-                create_branch_label(end_label);
 
-                var line_num = 0;
-                var elseif_line = get_next_line(out line_num);
-                create_post_label(if_false_label, line_num);
-
-                create_condition(MacroKeywords.ELSEIF, elseif_line, line_num);
-                
-                if_false_label = create_new_label();
-                create_branch_false(line_num, if_false_label);
-
-                create_block();
-            }
-        }
 
         #endregion
 

@@ -30,11 +30,18 @@ namespace MacroPLC
 
         private void GetStatementType()
         {
+            if (Text.IsNullOrWhite())
+                _type = Keyword.WHITE_SPACE;
+
             var lex_scn = new MacroLexicalScanner(Text);
             var next_tkn = lex_scn.ScanNext();
 
-            if (Text.IsNullOrWhite())
-                _type = Keyword.WHITE_SPACE;
+            _tokens = new List<Token>();
+            while (next_tkn.Type == TokenType.WHITE_SPACE)
+            {
+                _tokens.Add(next_tkn);
+                next_tkn = lex_scn.ScanNext();
+            }
 
             if(next_tkn.Type == TokenType.LOCAL_VAR
                 || next_tkn.Type == TokenType.GLOBAL_VAR)
@@ -54,7 +61,6 @@ namespace MacroPLC
                 _type = Keyword.FUNCTION;
             }
 
-            _tokens = new List<Token>();
             while(next_tkn.Type != TokenType.END)
             {
                 _tokens.Add(next_tkn);
