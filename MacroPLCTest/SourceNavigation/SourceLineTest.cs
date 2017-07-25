@@ -13,6 +13,13 @@ namespace MacroPLCTest
             Assert.AreEqual(1, src_line.LineNumber);
             Assert.AreEqual(Keyword.VAR, src_line.Type);
         }
-         
+
+        [Test]
+        public void SourceLine_LabelType()
+        {
+            var src_line = new SourceLine("L10:", 1);
+            Assert.AreEqual(1, src_line.LineNumber);
+            Assert.AreEqual(Keyword.LABEL, src_line.Type);
+        }
     }
 }

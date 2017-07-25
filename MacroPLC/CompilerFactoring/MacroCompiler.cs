@@ -199,7 +199,7 @@ namespace MacroPLC
             compiledTasks.Add(Task.PostLabel(label, line_num));
         }
 
-        private static IEnumerable<Token> get_remain_tokens( TokenManager token_mgr)
+        private static List<Token> get_remain_tokens( TokenManager token_mgr)
         {
             var condition_tokens = new List<Token>();
             while (token_mgr.IgnoreWhiteLookNextToken().Type != TokenType.END)
@@ -267,10 +267,7 @@ namespace MacroPLC
         #region Loop
         private static void verify_loop_keyword(SourceLine loop_line)
         {
-            // Only LOOP, no end statement ';'
-            var token_mgr = new TokenManager(loop_line.Tokens);
-            match_next_token(MacroKeywords.LOOP, token_mgr);
-            verify_next_end_token(token_mgr);
+            verify_keyword_without_endstatement(MacroKeywords.LOOP, loop_line);
         }
         #endregion
 
@@ -293,7 +290,7 @@ namespace MacroPLC
             if (token_mgr.IgnoreWhiteLookNextToken().Text == MacroKeywords.BY)
             {
                 match_next_token(MacroKeywords.BY, token_mgr);
-                by_value_tokens = get_tokens_until_keyword_or_end(MacroKeywords.END, token_mgr);
+                by_value_tokens = get_remain_tokens(token_mgr);
             }
             else
             {
@@ -310,5 +307,17 @@ namespace MacroPLC
         }
 
         #endregion
+
+        private void verify_repeat_keyword(SourceLine repeat_line)
+        {
+            verify_keyword_without_endstatement(MacroKeywords.REPEAT, repeat_line);
+        }
+
+        private static void verify_keyword_without_endstatement(string keyword, SourceLine repeat_line)
+        {
+            var token_mgr = new TokenManager(repeat_line.Tokens);
+            match_next_token(keyword, token_mgr);
+            verify_next_end_token(token_mgr);
+        }
     }
 }

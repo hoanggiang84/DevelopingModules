@@ -327,5 +327,32 @@ namespace MacroPLCTest
             AssertLineNumber(7, 3);
             AssertString(7,"L1");
         }
+
+        [Test]
+        public void Compile_repeatUntil_returnWhileTasks()
+        {
+            var src_code = "@1 = 1;\r\n" +
+                            "REPEAT \r\n" +
+                            "    \t@1 = @1 + 1;\r\n" +
+                            "UNTIL @1>10";
+            compileToTaskList(src_code);
+            AssertTaskType(1, TaskType.LABEL);
+            AssertLineNumber(1, 1);
+            AssertString(1, "L0");
+
+            AssertTaskType(2, TaskType.ASSIGNMENT);
+            AssertLineNumber(2,2);
+
+            AssertTaskType(3, TaskType.BOOLEAN_EVALUATE);
+            AssertLineNumber(3,3);
+
+            AssertTaskType(4, TaskType.BRANCH_TRUE);
+            AssertLineNumber(4,0);
+
+            AssertTaskType(5, TaskType.LABEL);
+            AssertLineNumber(5,3);
+            AssertString(5,"L1");
+        }
+
     }
 }

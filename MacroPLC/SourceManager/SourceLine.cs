@@ -63,6 +63,21 @@ namespace MacroPLC
             {
                 _type = Keyword.FUNCTION;
             }
+            else if(next_tkn.Type == TokenType.IDENTIFIER)
+            {   
+                _tokens.Add(next_tkn);
+                next_tkn = lex_scn.ScanNext();
+                if(next_tkn.Text == MacroKeywords.COLON)
+                {
+                    _type = Keyword.LABEL;
+                    while (next_tkn.Type != TokenType.END)
+                    {
+                        _tokens.Add(next_tkn);
+                        next_tkn = lex_scn.ScanNext();
+                    }
+                    return;
+                }
+            }
 
             while(next_tkn.Type != TokenType.END)
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HPMacroCommon;
 using HPMacroTask;
 using MacroLexScn;
@@ -36,6 +37,9 @@ namespace MacroPLC
                     case Keyword.WHITE_SPACE:
                         get_next_line();
                         break;
+                    case Keyword.LABEL:
+                        create_label_goto();
+                        break;
                     case Keyword.VAR:
                         create_assignment();
                         break;
@@ -47,6 +51,9 @@ namespace MacroPLC
                         break;
                     case Keyword.BREAK:
                         create_break(loop_label);
+                        break;
+                    case Keyword.GOTO:
+                        create_goto();
                         break;
                     case Keyword.IF:
                         create_if(loop_label);
@@ -60,6 +67,10 @@ namespace MacroPLC
                     case Keyword.FOR:
                         create_for();
                         break;
+                    case Keyword.REPEAT:
+                        create_repeat();
+                        break;
+
                     default:
                         line_content = get_next_line();
                         break;
@@ -67,6 +78,50 @@ namespace MacroPLC
 
                 line_content = look_next_line();
             }
+        }
+
+        private void create_label_goto()
+        {
+            var label_line = get_next_line();
+            var token_mgr = new TokenManager(label_line.Tokens);
+            var goto_label = create_program_label(token_mgr.IgnoreWhiteGetNextToken().Text);
+            match_next_token(MacroKeywords.COLON, token_mgr);
+            create_post_label(goto_label, label_line.LineNumber);
+        }
+
+        private void create_goto()
+        {
+            var goto_line = get_next_line();
+            var token_mgr = new TokenManager(goto_line.Tokens);
+            match_next_token(MacroKeywords.GOTO, token_mgr);
+            var label_token = token_mgr.IgnoreWhiteGetNextToken();
+            if(label_token.Type != TokenType.IDENTIFIER)
+                throw new Exception(string.Format("Invalid label '{0}'", label_token.Text));
+            match_next_token(MacroKeywords.END_STATEMENT,token_mgr);
+            compiledTasks.Add(Task.Branch(label_token.Text, goto_line.LineNumber));
+        }
+
+        private void create_repeat()
+        {
+            var repeat_line = get_next_line();
+            verify_repeat_keyword(repeat_line);
+
+            var repeat_label = create_new_label();
+            create_post_label(repeat_label,repeat_line.LineNumber);
+
+            var end_label = create_new_label();
+            create_block(end_label);
+
+            var until_line = get_next_line();
+            var token_mgr = new TokenManager(until_line.Tokens);
+            match_next_token(MacroKeywords.UNTIL, token_mgr);
+
+            var condition_tokens = get_remain_tokens(token_mgr);
+            compiledTasks.Add(Task.BoolCondition(condition_tokens, until_line.LineNumber));
+
+            compiledTasks.Add(Task.BranchIfTrue(repeat_label));
+
+            create_post_label(end_label, until_line.LineNumber);
         }
 
         private void create_for()
