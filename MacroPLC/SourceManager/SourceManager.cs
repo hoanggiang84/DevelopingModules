@@ -46,11 +46,9 @@ namespace MacroPLC
         /// <summary>
         /// Get next source code line
         /// </summary>
-        /// <param name="lineIndex">First line index is 0</param>
         /// <returns></returns>
-        public SourceLine GetNextLine(out int lineIndex)
+        public SourceLine GetNextLine()
         {
-            lineIndex = CurrentLine;
             return GetCurrentLine();
         }
 
@@ -58,9 +56,8 @@ namespace MacroPLC
         /// Look current line and increase index by 1
         /// </summary>
         /// <returns></returns>
-        public SourceLine LookCurrentLine(out int lineIndex)
+        public SourceLine LookCurrentLine()
         {
-            lineIndex = CurrentLine;
             if (CurrentLine >= sourceLines.Count)
             {
                 CurrentLine = sourceLines.Count;

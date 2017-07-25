@@ -290,7 +290,42 @@ namespace MacroPLCTest
 
             AssertTaskType(7, TaskType.LABEL);
             AssertString(7, "L1");
+        }
 
+        [Test]
+        public void Compile_for_returnForTasks()
+        {
+            var src_code = "\r\nFOR @1 = 1 TO 10\r\n" +
+                           " \t @2 = 1;\r\n" +
+                           "ENDFOR;\r\n";
+            compileToTaskList(src_code);
+            AssertTaskType(0, TaskType.ASSIGNMENT);
+            AssertLineNumber(0, 1);
+
+            AssertTaskType(1, TaskType.LABEL);
+            AssertLineNumber(1, 1);
+            AssertString(1,"L0");
+
+            AssertTaskType(2, TaskType.ARITHMETIC_EVALUATE);
+            AssertLineNumber(2,0);
+
+            AssertTaskType(3, TaskType.BRANCH_GREATER);
+            AssertLineNumber(3,0);
+            AssertString(3, "L1");
+
+            AssertTaskType(4, TaskType.ASSIGNMENT);
+            AssertLineNumber(4,2);
+
+            AssertTaskType(5, TaskType.ASSIGNMENT);
+            AssertLineNumber(5,1);
+
+            AssertTaskType(6, TaskType.BRANCH);
+            AssertLineNumber(6, 0);
+            AssertString(6,"L0");
+
+            AssertTaskType(7, TaskType.LABEL);
+            AssertLineNumber(7, 3);
+            AssertString(7,"L1");
         }
     }
 }

@@ -163,14 +163,14 @@ namespace HPMacroTask
             return new Task(TaskType.LABEL, label);
         }
 
-        public static Task BranchIfGreater(string name, string label1)
+        public static Task BranchIfGreater(string name, string label)
         {
-            return new Task(TaskType.BRANCH_GREATER, name, label1);
+            return new Task(TaskType.BRANCH_GREATER, name, label);
         }
 
-        public static Task BranchIfEqual(int caseValue, string label1)
+        public static Task BranchIfEqual(int caseValue, string label)
         {
-            return new Task(TaskType.BRANCH_EQUAL, caseValue, label1);
+            return new Task(TaskType.BRANCH_EQUAL, caseValue, label);
         }
 
         /// <summary>
@@ -187,6 +187,16 @@ namespace HPMacroTask
                                        };
             assignmentTokens.AddRange(byEval);
             return new Task(TaskType.ASSIGNMENT, assignmentTokens);
+        }
+
+        /// <summary>
+        /// Variable += byEval
+        /// </summary>
+        public static Task IncreaseVariable(Token variable, List<Token> byEval, int line_num)
+        {
+            var assignmentTask = IncreaseVariable(variable, byEval);
+            assignmentTask.SetLineNumber(line_num);
+            return assignmentTask;
         }
         #endregion
     }

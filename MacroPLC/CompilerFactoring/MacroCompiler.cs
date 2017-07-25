@@ -22,32 +22,23 @@ namespace MacroPLC
             return "P" + label;
         }
 
-        private SourceLine get_next_line(out int lineNum)
+        private SourceLine get_next_line()
         {
-            return sourceManager.GetNextLine(out lineNum);
+            return sourceManager.GetNextLine();
         }
 
         private SourceLine look_next_line()
         {
-            var lineNum = 0;
-            return sourceManager.LookCurrentLine(out lineNum);
+            return sourceManager.LookCurrentLine();
         }
 
         private static List<Token> extract_statement_tokens(IEnumerable<Token> tokens)
         {
             // Skip last end statement token ';'
-            var tokenList = new List<Token>();
             var token_mgr = new TokenManager(tokens);
-            var next_token = token_mgr.IgnoreWhiteLookNextToken();
-            while (next_token.Type != TokenType.END
-                && next_token.Text != MacroKeywords.END_STATEMENT)
-            {
-                tokenList.Add(token_mgr.IgnoreWhiteGetNextToken());
-                next_token = token_mgr.IgnoreWhiteLookNextToken();
-            }
-
+            var tokenList = get_tokens_until_keyword_or_end(MacroKeywords.END_STATEMENT, token_mgr);
             match_next_token(MacroKeywords.END_STATEMENT, token_mgr);
-            
+           
             verify_next_end_token(token_mgr);
 
             return tokenList;
@@ -59,6 +50,27 @@ namespace MacroPLC
                 throw new Exception(string.Format("Expected '{0}' statement", expected));
         }
 
+        private List<Token> extract_next_line_statement_tokens(out int line_num)
+        {
+            var next_line = get_next_line();
+            var tokens = next_line.Tokens;
+            line_num = next_line.LineNumber;
+            return extract_statement_tokens(tokens);
+        }
+
+        private static List<Token> get_tokens_until_keyword_or_end(string keyword, TokenManager token_mgr)
+        {
+            var tokens = new List<Token>();
+            var next_token = token_mgr.IgnoreWhiteLookNextToken();
+            while (next_token.Type != TokenType.END
+                   && next_token.Text != keyword)
+            {
+                tokens.Add(token_mgr.IgnoreWhiteGetNextToken());
+                next_token = token_mgr.IgnoreWhiteLookNextToken();
+            }
+            return tokens;
+        }
+        
         #endregion
         
         #region Block
@@ -94,8 +106,8 @@ namespace MacroPLC
         // IF CLAUSE
         private void create_if_clause(string end_loop_label, out string if_false_label)
         {
-            var if_line_num = 0;
-            var if_line = get_next_line(out if_line_num);
+            var if_line = get_next_line();
+            var if_line_num = if_line.LineNumber;
             if_false_label = create_new_label();
 
             create_if_condition(if_line, if_line_num);
@@ -134,8 +146,8 @@ namespace MacroPLC
             {
                 create_branch_label(end_label);
 
-                var line_num = 0;
-                var elseif_line = get_next_line(out line_num);
+                var elseif_line = get_next_line();
+                var line_num = elseif_line.LineNumber;
                 create_post_label(if_false_label, line_num);
 
                 create_condition(MacroKeywords.ELSEIF, elseif_line, line_num);
@@ -155,8 +167,7 @@ namespace MacroPLC
             if (look_next_line().Type != Keyword.ELSE) 
                 return;
 
-            var next_line_num = 0;
-            get_next_line(out next_line_num);
+            var next_line_num = get_next_line().LineNumber;
 
             if(end_label.IsNullOrWhite())
                 end_label = create_new_label();
@@ -166,6 +177,7 @@ namespace MacroPLC
             create_post_label(if_false_label, next_line_num);
 
             create_block(end_loop_label);
+
             if_false_label = end_label;
         }
 
@@ -183,8 +195,7 @@ namespace MacroPLC
         private void create_endif(string label)
         {
             verify_next_source_line(Keyword.END_IF);
-            var line_num = 0;
-            get_next_line(out line_num);
+            var line_num = get_next_line().LineNumber;
             compiledTasks.Add(Task.PostLabel(label, line_num));
         }
 
@@ -220,16 +231,14 @@ namespace MacroPLC
             verify_next_end_token(token_mgr);
         }
 
-
-
         #endregion
 
         #region While
 
         private void create_while_condition(string while_label)
         {
-            var line_num = 0;
-            var while_line = get_next_line(out line_num);
+            var while_line = get_next_line();
+            var line_num = while_line.LineNumber;
 
             create_post_label(while_label, line_num);
 
@@ -244,6 +253,60 @@ namespace MacroPLC
             var condition_tokens = new List<Token>();
             condition_tokens.AddRange(get_remain_tokens(token_mgr));
             compiledTasks.Add(Task.BoolCondition(condition_tokens, line_num));
+        }
+
+        private void create_end_while(string end_label)
+        {
+            verify_next_source_line(Keyword.END_WHILE);
+            var end_line_num = get_next_line().LineNumber;
+            create_post_label(end_label, end_line_num);
+        }
+
+        #endregion
+
+        #region Loop
+        private static void verify_loop_keyword(SourceLine loop_line)
+        {
+            // Only LOOP, no end statement ';'
+            var token_mgr = new TokenManager(loop_line.Tokens);
+            match_next_token(MacroKeywords.LOOP, token_mgr);
+            verify_next_end_token(token_mgr);
+        }
+        #endregion
+
+        #region For
+
+        private static Token extract_for_variable_assignment_info(SourceLine next_line, out List<Token> assign_tokens, out List<Token> to_value_tokens, out List<Token> by_value_tokens)
+        {
+            // For <Assigment>
+            var token_mgr = new TokenManager(next_line.Tokens);
+            match_next_token(MacroKeywords.FOR, token_mgr);
+            var variable_token = token_mgr.IgnoreWhiteLookNextToken();
+            assign_tokens = get_tokens_until_keyword_or_end(MacroKeywords.TO, token_mgr);
+
+            // To 
+            match_next_token(MacroKeywords.TO, token_mgr);
+            to_value_tokens = get_tokens_until_keyword_or_end(MacroKeywords.BY, token_mgr);
+
+            // By
+            by_value_tokens = new List<Token>();
+            if (token_mgr.IgnoreWhiteLookNextToken().Text == MacroKeywords.BY)
+            {
+                match_next_token(MacroKeywords.BY, token_mgr);
+                by_value_tokens = get_tokens_until_keyword_or_end(MacroKeywords.END, token_mgr);
+            }
+            else
+            {
+                by_value_tokens.Add(new Token("1", TokenType.NUMBER));
+            }
+            return variable_token;
+        }
+
+        private void create_endfor(string endfor_label)
+        {
+            verify_next_source_line(Keyword.END_FOR);
+            var line_number = get_next_line().LineNumber;
+            create_post_label(endfor_label, line_number);
         }
 
         #endregion

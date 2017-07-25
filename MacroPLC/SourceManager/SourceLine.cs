@@ -31,7 +31,10 @@ namespace MacroPLC
         private void GetStatementType()
         {
             if (Text.IsNullOrWhite())
+            {
                 _type = Keyword.WHITE_SPACE;
+                return;
+            }
 
             var lex_scn = new MacroLexicalScanner(Text);
             var next_tkn = lex_scn.ScanNext();

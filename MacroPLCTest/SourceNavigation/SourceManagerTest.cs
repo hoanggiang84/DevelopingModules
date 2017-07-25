@@ -18,9 +18,8 @@ namespace MacroPLCTest
         [Test]
         public void GetFirstLine_returnLineIndexAndContent()
         {
-            int index;
-            var lineContent = sourceMgr.GetNextLine(out index);
-            Assert.AreEqual(0,index);
+            var lineContent = sourceMgr.GetNextLine();
+            Assert.AreEqual(0,lineContent.LineNumber);
             Assert.AreEqual("one", lineContent.Text);
         }
 
@@ -35,15 +34,14 @@ namespace MacroPLCTest
         [Test]
         public void GetLinesUntilEnd_returnIndicesAndLineContents()
         {
-            int index;
             var count = 0;
             var sourceLines = source.Split(new[] {'\n'}).RemoveEmptyString();
-            var lineContent = sourceMgr.GetNextLine(out index);
+            var lineContent = sourceMgr.GetNextLine();
             while (lineContent != null)
             {
-                Assert.AreEqual(count, index);
+                Assert.AreEqual(count, lineContent.LineNumber);
                 Assert.AreEqual(sourceLines[count], lineContent.Text);
-                lineContent = sourceMgr.GetNextLine(out index);
+                lineContent = sourceMgr.GetNextLine();
                 count++;
             }
         }
