@@ -50,29 +50,31 @@ namespace MacroPLC
         public bool Validate()
         {
             var cmd_token = Tokens.First();
-            if(!isGMExtensionCommand(cmd_token))
+            if(!IsGMExtensionCommand(cmd_token))
                 throw new Exception(string.Format("Invalid G code extension command '{0}'", 
                     cmd_token.Text));
 
             for (var i = 1; i < Tokens.Count; i++)
             {
-                if(Tokens[i].Type != TokenType.NUMBER 
-                    && Tokens[i].Type != TokenType.GLOBAL_VAR
-                    && Tokens[i].Type != TokenType.LOCAL_VAR)
+                var tkn = Tokens[i];
+                if(tkn.Type != TokenType.NUMBER 
+                    && tkn.Type != TokenType.GLOBAL_VAR
+                    && tkn.Type != TokenType.LOCAL_VAR)
                     throw new Exception(
                         string.Format("G code extension parameter must be a number or variable '{0}'", 
-                        Tokens[i].Text));
+                        tkn.Text));
             }
+
             return true;
         }
 
         /// <summary>
         /// M or G[0000~9999]
         /// </summary>
-        private static bool isGMExtensionCommand(Token token)
+        public static bool IsGMExtensionCommand(Token token)
         {
             var cmd = token.Text;
-            if (token.Type != TokenType.IDENTIFIER && cmd[0] != 'M' && cmd[0] != 'G')
+            if (token.Type != TokenType.IDENTIFIER || (cmd[0] != 'M' && cmd[0] != 'G'))
                 return false;
 
             var gm_num_str = cmd.Substring(1);

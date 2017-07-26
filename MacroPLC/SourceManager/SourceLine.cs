@@ -55,7 +55,8 @@ namespace MacroPLC
             {
                 _type = MacroKeywords.GetKeywordType(next_tkn.Text);
             }
-            else if (GCodeValidate.ValidateGCodeCommand(next_tkn.Text))
+            else if (GCodeValidate.ValidateGCodeCommand(next_tkn.Text)
+                || GMCodeExtension.IsGMExtensionCommand(next_tkn))
             {
                 _type = Keyword.GCODE;
             }
