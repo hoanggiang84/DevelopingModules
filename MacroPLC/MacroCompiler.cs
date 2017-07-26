@@ -70,7 +70,9 @@ namespace MacroPLC
                     case Keyword.REPEAT:
                         create_repeat();
                         break;
-
+                    case Keyword.SWITCH:
+                        create_switch();
+                        break;
                     default:
                         line_content = get_next_line();
                         break;
@@ -78,6 +80,49 @@ namespace MacroPLC
 
                 line_content = look_next_line();
             }
+        }
+
+        private void create_switch()
+        {
+            var switch_line = get_next_line();
+            var token_mgr = new TokenManager(switch_line.Tokens);
+            match_next_token(MacroKeywords.SWITCH, token_mgr);
+            var switch_key_tokens = get_remain_tokens(token_mgr);
+
+            create_arithmetic_expression(switch_key_tokens, switch_line.LineNumber);
+
+            var select_case_label = create_new_label();
+            create_branch_label(select_case_label);
+
+            var case_label_storage = new Dictionary<int, string>();
+            var end_switch_label = create_new_label();
+
+            var next_line = look_next_line();
+            while (next_line.Type != Keyword.END_SWITCH
+                && next_line.Type != Keyword.END)
+            {
+                switch (next_line.Type)
+                {
+                    case Keyword.CASE:
+                        var case_token_mgr = new TokenManager(next_line.Tokens);
+                        match_next_token(MacroKeywords.CASE,token_mgr);
+
+                        break;
+                        
+                    case Keyword.DEFAULT:
+                        break;
+                    default:
+                        throw new Exception(string.Format("Unrecognized statement '{0}'", 
+                            next_line.Text));
+                }
+            }
+        }
+
+        private void create_arithmetic_expression(List<Token> tokens, int line_num)
+        {
+            var task = Task.ArithmeticExpression(tokens);
+            task.SetLineNumber(line_num);
+            compiledTasks.Add(task);
         }
 
         private void create_label_goto()

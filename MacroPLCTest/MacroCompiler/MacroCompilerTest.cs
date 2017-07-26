@@ -354,5 +354,24 @@ namespace MacroPLCTest
             AssertString(5,"L1");
         }
 
+        [Test]
+        public void Compile_switch_returnSwitchTasks()
+        {
+            var src_code = "@1 = 1;\r\n" +
+                            "SWITCH @1 \r\n" +
+                                "\tCASE 1:\r\n" +
+                                    "\t\t@2 = 1;\r\n"+
+                                "\tCASE 2:\r\n" +
+                                    "\t\t@2 = 10;\r\n" +
+                                "\tDEFAULT:\r\n" +
+                                    "\t\t@2 = 0;\r\n" +
+                            "ENDSWITCH;\r\n";
+            compileToTaskList(src_code);
+            AssertTaskType(1, TaskType.ARITHMETIC_EVALUATE);
+            AssertLineNumber(1,1);
+
+            AssertTaskType(2, TaskType.BRANCH);
+            AssertString(2,"L0");
+        }
     }
 }
