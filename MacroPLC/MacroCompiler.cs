@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using HPMacroCommon;
 using HPMacroTask;
 using MacroLexScn;
+using UtilitiesVS2008WinCE;
 
 namespace MacroPLC
 {
@@ -97,25 +98,76 @@ namespace MacroPLC
             var case_label_storage = new Dictionary<int, string>();
             var end_switch_label = create_new_label();
 
+            var default_label = string.Empty;
             var next_line = look_next_line();
             while (next_line.Type != Keyword.END_SWITCH
                 && next_line.Type != Keyword.END)
             {
+                next_line = get_next_line();
                 switch (next_line.Type)
                 {
                     case Keyword.CASE:
+                        var case_label = create_new_label();
                         var case_token_mgr = new TokenManager(next_line.Tokens);
-                        match_next_token(MacroKeywords.CASE,token_mgr);
+                        match_next_token(MacroKeywords.CASE,case_token_mgr);
+                        var next_token = case_token_mgr.IgnoreWhiteLookNextToken();
+                        while (next_token.Text != MacroKeywords.COLON
+                            && next_token.Type != TokenType.END)
+                        {
+                            next_token = case_token_mgr.IgnoreWhiteGetNextToken();
+                            int case_value;
+                            if(!next_token.Text.TryParseInt32(out case_value))
+                                throw new Exception(string.Format("Expected an integer number '{0}'", 
+                                    next_token.Text));
+
+                            if(case_label_storage.ContainsKey(case_value))
+                                throw new Exception(string.Format("Duplicate case '{0}'", case_value));
+
+                            case_label_storage.Add(case_value, case_label);
+
+                            if(case_token_mgr.IgnoreWhiteLookNextToken().Text == MacroKeywords.COMMA)
+                                match_next_token(MacroKeywords.COMMA, case_token_mgr);
+                            next_token = case_token_mgr.IgnoreWhiteLookNextToken();
+                        }
+
+                        match_next_token(MacroKeywords.COLON, case_token_mgr);
+
+                        create_post_label(case_label, next_line.LineNumber);
+
+                        create_block(end_switch_label);
+
+                        create_branch_label(end_switch_label);
 
                         break;
                         
                     case Keyword.DEFAULT:
+                        default_label = create_new_label();
+                        create_post_label(default_label, next_line.LineNumber);
+
+                        create_block(end_switch_label);
+
+                        create_branch_label(end_switch_label);
+
                         break;
+
                     default:
                         throw new Exception(string.Format("Unrecognized statement '{0}'", 
                             next_line.Text));
                 }
+                next_line = look_next_line();
             }
+
+            create_post_label(select_case_label, switch_line.LineNumber);
+            foreach (var e in case_label_storage)
+                compiledTasks.Add(Task.BranchIfEqual(e.Key, e.Value));
+
+            if(default_label.IsNotNullOrWhite())
+                create_branch_label(default_label);
+
+            verify_next_source_line(Keyword.END_SWITCH);
+
+            var end_switch_line = get_next_line();
+            create_post_label(end_switch_label, end_switch_line.LineNumber);
         }
 
         private void create_arithmetic_expression(List<Token> tokens, int line_num)

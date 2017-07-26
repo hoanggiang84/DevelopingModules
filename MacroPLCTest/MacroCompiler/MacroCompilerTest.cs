@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HPMacroTask;
 using MacroPLC;
 using NUnit.Framework;
@@ -364,7 +365,7 @@ namespace MacroPLCTest
                                 "\tCASE 2:\r\n" +
                                     "\t\t@2 = 10;\r\n" +
                                 "\tDEFAULT:\r\n" +
-                                    "\t\t@2 = 0;\r\n" +
+                                    "\t\tWAIT();\r\n" +
                             "ENDSWITCH;\r\n";
             compileToTaskList(src_code);
             AssertTaskType(1, TaskType.ARITHMETIC_EVALUATE);
@@ -372,6 +373,74 @@ namespace MacroPLCTest
 
             AssertTaskType(2, TaskType.BRANCH);
             AssertString(2,"L0");
+
+            AssertTaskType(3, TaskType.LABEL);
+            AssertLineNumber(3, 2);
+            AssertString(3, "L2");
+
+            AssertTaskType(4, TaskType.ASSIGNMENT);
+            AssertLineNumber(4,3);
+
+            AssertTaskType(5, TaskType.BRANCH);
+            AssertString(5, "L1");
+
+            AssertTaskType(6, TaskType.LABEL);
+            AssertLineNumber(6, 4);
+            AssertString(6, "L3");
+
+            AssertTaskType(7, TaskType.ASSIGNMENT);
+            AssertLineNumber(7, 5);
+
+            AssertTaskType(8, TaskType.BRANCH);
+            AssertString(8, "L1");
+
+            AssertTaskType(9, TaskType.LABEL);
+            AssertLineNumber(9, 6);
+            AssertString(9, "L4");
+
+            AssertTaskType(10, TaskType.BUILT_IN_FUNCTION);
+            AssertLineNumber(10, 7);
+
+            AssertTaskType(11, TaskType.BRANCH);
+            AssertString(11, "L1");
+
+            AssertTaskType(12, TaskType.LABEL);
+            AssertString(12, "L0");
+            AssertLineNumber(12, 1);
+            
+            AssertTaskType(13,TaskType.BRANCH_EQUAL);
+            AssertString(13,"L2");
+
+            AssertTaskType(14, TaskType.BRANCH_EQUAL);
+            AssertString(14, "L3");
+
+            AssertTaskType(15, TaskType.BRANCH);
+            AssertString(15, "L4");
+
+            AssertTaskType(16, TaskType.LABEL);
+            AssertString(16, "L1");
+            AssertLineNumber(16, 8);
+
+        }
+
+        [Test]
+        public void Compile_switchDuplicateCase_throwException()
+        {
+            var src_code = "@1 = 1;\r\n" +
+                            "SWITCH @1 \r\n" +
+                                "\tCASE 1,2:\r\n" +
+                                    "\t\t@2 = 1;\r\n" +
+                                "\tCASE 2:\r\n" +
+                                    "\t\t@2 = 10;\r\n" +
+                            "ENDSWITCH;\r\n";
+            try
+            {
+                compileToTaskList(src_code);
+            }
+            catch(Exception ex)
+            {
+                Assert.True(ex.Message.Contains("Duplicate") && ex.Message.Contains("2"));
+            }
         }
     }
 }
