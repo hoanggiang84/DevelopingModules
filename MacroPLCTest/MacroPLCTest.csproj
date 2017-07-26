@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GMCodeExtension\GMCodeExtensionTest.cs" />
     <Compile Include="LexicalScanner\NotEmptyStringLexicalScannerTest.cs" />
     <Compile Include="MacroCompiler\MacroExecutorTest.cs" />
     <Compile Include="LexicalScanner\MacroLexicalScanner.cs" />

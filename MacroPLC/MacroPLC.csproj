@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompilerFactoring\MacroCompiler.cs" />
+    <Compile Include="GMCodeExtension\GMCodeExtension.cs" />
     <Compile Include="SourceManager\SourceLine.cs" />
     <Compile Include="SourceManager\StatementType.cs" />
     <Compile Include="Statements\BuiltInFunctionStatement.cs" />
