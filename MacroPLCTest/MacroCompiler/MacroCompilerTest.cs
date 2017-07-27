@@ -308,7 +308,7 @@ namespace MacroPLCTest
             AssertString(1,"L0");
 
             AssertTaskType(2, TaskType.ARITHMETIC_EVALUATE);
-            AssertLineNumber(2,0);
+            AssertLineNumber(2,1);
 
             AssertTaskType(3, TaskType.BRANCH_GREATER);
             AssertLineNumber(3,0);
@@ -441,6 +441,38 @@ namespace MacroPLCTest
             {
                 Assert.True(ex.Message.Contains("Duplicate") && ex.Message.Contains("2"));
             }
+        }
+
+        [Test]
+        public void Compile_gotoInvalidLabel_throwException()
+        {
+            var src_code = "GOTO 1235;";
+            try
+            {
+                compileToTaskList(src_code);
+            }
+            catch (Exception ex)
+            {
+                Assert.True(ex.Message.Contains("Invalid") && ex.Message.Contains("1235"));
+            }
+        }
+
+        [Test]
+        public void Compile_gotoValidLabel_returnBranchTask()
+        {
+            var src_code = "GOTO L1235;";
+            compileToTaskList(src_code);
+            AssertTaskType(0, TaskType.BRANCH);
+            AssertString(0,"PL1235");
+        }
+
+        [Test]
+        public void Compile_labelGoto_returnBranchTask()
+        {
+            var src_code = "L1235:\r\n";
+            compileToTaskList(src_code);
+            AssertTaskType(0, TaskType.LABEL);
+            AssertString(0, "PL1235");
         }
     }
 }
