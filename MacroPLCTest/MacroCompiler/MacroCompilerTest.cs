@@ -200,7 +200,7 @@ namespace MacroPLCTest
             AssertTaskType(cnt++, TaskType.BOOLEAN_EVALUATE);
             AssertLineNumber(1, 0);
             AssertTaskType(cnt++, TaskType.BRANCH_FALSE);
-            AssertLineNumber(2, 0);
+            AssertLineNumber(2, 1);
             AssertTaskType(cnt++, TaskType.ASSIGNMENT);
             AssertLineNumber(3, 1);
             AssertTaskType(cnt++, TaskType.BUILT_IN_FUNCTION);
@@ -311,7 +311,6 @@ namespace MacroPLCTest
             AssertLineNumber(2,1);
 
             AssertTaskType(3, TaskType.BRANCH_GREATER);
-            AssertLineNumber(3,0);
             AssertString(3, "L1");
 
             AssertTaskType(4, TaskType.ASSIGNMENT);
@@ -321,7 +320,6 @@ namespace MacroPLCTest
             AssertLineNumber(5,1);
 
             AssertTaskType(6, TaskType.BRANCH);
-            AssertLineNumber(6, 0);
             AssertString(6,"L0");
 
             AssertTaskType(7, TaskType.LABEL);
@@ -348,7 +346,7 @@ namespace MacroPLCTest
             AssertLineNumber(3,3);
 
             AssertTaskType(4, TaskType.BRANCH_TRUE);
-            AssertLineNumber(4,0);
+            AssertLineNumber(4,3);
 
             AssertTaskType(5, TaskType.LABEL);
             AssertLineNumber(5,3);

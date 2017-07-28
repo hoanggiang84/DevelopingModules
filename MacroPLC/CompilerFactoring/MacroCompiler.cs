@@ -106,9 +106,9 @@ namespace MacroPLC
             verify_next_end_token(token_mgr);
         }
 
-        private void create_branch_false(string label)
+        private void create_branch_false(string label, int line_num)
         {
-            compiledTasks.Add(Task.BranchIfFalse(label));
+            compiledTasks.Add(Task.BranchIfFalse(label, line_num));
         }
 
         private void create_branch_false(int line_num, string false_label)
@@ -116,14 +116,14 @@ namespace MacroPLC
             compiledTasks.Add(Task.BranchIfFalse(false_label, line_num));
         }
 
-        private void create_branch_true(string repeat_label)
+        private void create_branch_true(string repeat_label, int line_num)
         {
-            compiledTasks.Add(Task.BranchIfTrue(repeat_label));
+            compiledTasks.Add(Task.BranchIfTrue(repeat_label, line_num));
         }
 
-        private void create_branch_label(string label)
+        private void create_branch_label(string label, int line_num)
         {
-            compiledTasks.Add(Task.Branch(label));
+            compiledTasks.Add(Task.Branch(label, line_num));
         }
 
         private void create_post_label(string label, int line_num)
@@ -216,12 +216,14 @@ namespace MacroPLC
             end_label = create_new_label();
             while (look_next_line().Type == Keyword.ELSEIF)
             {
-                // End label needed only when there are ELSEIF
-                // After each IF or ELSEIF block, branching to end label (ENDIF)
-                create_branch_label(end_label);
-
                 var elseif_line = get_next_line();
                 var line_num = elseif_line.LineNumber;
+
+                // End label needed only when there are ELSEIF
+                // After each IF or ELSEIF block, branching to end label (ENDIF)
+                create_branch_label(end_label, line_num);
+
+
                 create_post_label(if_false_label, line_num);
 
                 create_condition(MacroKeywords.ELSEIF, elseif_line, line_num);
@@ -245,12 +247,11 @@ namespace MacroPLC
 
             var next_line_num = get_next_line().LineNumber;
 
-
             if (end_label.IsNullOrWhite())   // No ELSEIF
                 end_label = create_new_label();
 
             // IF condition is true, branching to end label
-            create_branch_label(end_label);             
+            create_branch_label(end_label, next_line_num);             
 
             create_post_label(if_false_label, next_line_num);
 
@@ -411,7 +412,7 @@ namespace MacroPLC
 
                         create_block(end_switch_label);
 
-                        create_branch_label(end_switch_label);
+                        create_branch_label(end_switch_label, look_next_line().LineNumber);
 
                         break;
 
@@ -421,7 +422,7 @@ namespace MacroPLC
 
                         create_block(end_switch_label);
 
-                        create_branch_label(end_switch_label);
+                        create_branch_label(end_switch_label, look_next_line().LineNumber);
 
                         break;
 

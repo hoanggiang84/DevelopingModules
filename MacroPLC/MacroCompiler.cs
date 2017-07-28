@@ -92,7 +92,7 @@ namespace MacroPLC
 
             // Branch to select case label
             var select_case_label = create_new_label();
-            create_branch_label(select_case_label);
+            create_branch_label(select_case_label, switch_line_number);
 
             // Post case labels
             // Create block for each case
@@ -110,7 +110,7 @@ namespace MacroPLC
 
             // Branch to default case if not equal case value
             if(default_label.IsNotNullOrWhite())
-                create_branch_label(default_label);
+                create_branch_label(default_label, look_next_line().LineNumber);
 
             verify_next_source_line_with_end_statement(Keyword.END_SWITCH);
 
@@ -158,7 +158,7 @@ namespace MacroPLC
             var until_line = get_next_line();
             create_until_condition(until_line);
 
-            create_branch_true(repeat_label);
+            create_branch_true(repeat_label, until_line.LineNumber);
 
             create_post_label(end_label, until_line.LineNumber);
         }
@@ -194,7 +194,7 @@ namespace MacroPLC
             create_update_for_variable(variable_token, by_value_tokens, line_number);
 
             // Branch to 'continue for' label
-            create_branch_label(continue_loop_label);
+            create_branch_label(continue_loop_label, look_next_line().LineNumber);
 
             create_endfor(endfor_label);
         }
@@ -219,7 +219,7 @@ namespace MacroPLC
 
             create_block(break_loop_label);
 
-            create_branch_label(loop_label);
+            create_branch_label(loop_label, look_next_line().LineNumber);
 
             verify_next_source_line_with_end_statement(Keyword.END_LOOP);
 
@@ -234,11 +234,11 @@ namespace MacroPLC
 
             create_while_condition(while_label);
 
-            create_branch_false(end_label);
+            create_branch_false(end_label, look_next_line().LineNumber);
 
             create_block(end_label);
 
-            create_branch_label(while_label);
+            create_branch_label(while_label, look_next_line().LineNumber);
 
             create_end_while(end_label);
         }
