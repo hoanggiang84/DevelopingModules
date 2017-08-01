@@ -71,7 +71,7 @@ namespace MacroPLC
 
         public static MacroStatement CreateStatement(
             TaskType task_type, 
-            List<Token> tokens, 
+            IEnumerable<Token> tokens, 
             VariableRepository variables)
         {
             switch (task_type)

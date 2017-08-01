@@ -8,6 +8,25 @@ namespace HPVariableRepository
 {
     public class VariableRepository
     {
+        private readonly Dictionary<string, HPType> _initial_variable_repository;
+        public VariableRepository(VariableRepository variable_repository)
+        {
+            _initial_variable_repository = new Dictionary<string, HPType>
+                (variable_repository._current_local_variables);
+
+            _current_local_variables = new Dictionary<string, HPType>();
+            foreach (var e in _initial_variable_repository)
+                _current_local_variables.Add(e.Key, HPType.CreateType(e.Value.Literal));
+            _local_variables_stack.Push(_current_local_variables);
+        }
+
+        public VariableRepository()
+        {
+            _initial_variable_repository = new Dictionary<string, HPType>();
+            _current_local_variables = new Dictionary<string, HPType>();
+            _local_variables_stack.Push(_current_local_variables);
+        }
+
         public event EventHandler<VariableArg> VariableAssigned;
 
         public event EventHandler<GCodeStatementArg> GCodeGenerated;
@@ -15,62 +34,67 @@ namespace HPVariableRepository
         public void OnVariableAssigned(string name, HPType value)
         {
             if (VariableAssigned != null)
-                VariableAssigned.Invoke(null, new VariableArg(name, value));
+                VariableAssigned.Invoke(this, new VariableArg(name, value));
         }
 
-        public void OnGCodeGenerated(string statemet)
+        public void OnGCodeGenerated(string statement)
         {
             if (GCodeGenerated != null)
-                GCodeGenerated.Invoke(null, new GCodeStatementArg(statemet));
+                GCodeGenerated.Invoke(this, new GCodeStatementArg(statement));
         }
 
-        private Dictionary<string, HPType> GlobalVariables = new Dictionary<string, HPType>();
+        private Dictionary<string, HPType> _global_variables =
+            new Dictionary<string, HPType>();
 
-        private Stack<Dictionary<string, HPType>> LocalVariablesStack =
+        private Stack<Dictionary<string, HPType>> _local_variables_stack =
             new Stack<Dictionary<string, HPType>>();
 
-        private Dictionary<string, HPType> CurrentLocalVariables;
+        private Dictionary<string, HPType> _current_local_variables = 
+            new Dictionary<string, HPType>();
 
         public void InitializeVariables()
         {
-            InitializeGlobalVariables();
+            initialize_global_variables();
             ResetLocalVariables();
         }
 
         public void ResetLocalVariables()
         {
-            LocalVariablesStack.Clear();
-            CurrentLocalVariables = new Dictionary<string, HPType>();
-            LocalVariablesStack.Push(CurrentLocalVariables);
+            _local_variables_stack.Pop();
+            _current_local_variables = new Dictionary<string, HPType>();
+            foreach (var e in _initial_variable_repository)
+                _current_local_variables.Add(e.Key, HPType.CreateType(e.Value.Literal));
+            _local_variables_stack.Push(_current_local_variables);
+            //_current_local_variables.Clear();
         }
 
-        private const string FloatInitial = ".0";
-        private const string IntegerInitial = "0";
-        private void InitializeGlobalVariables()
+        private const string FLOAT_INITIAL = ".0";
+        private const string INTEGER_INITIAL = "0";
+        private void initialize_global_variables()
         {
             // @0~@511: float arithmetic global variables
             var index = 0;
             for (; index < 512; index++)
             {
                 var varName = string.Format("@{0}", index);
-                if (!(GlobalVariables.ContainsKey(varName)))
-                    GlobalVariables.Add(varName, HPType.CreateType(FloatInitial));
+                if (!(_global_variables.ContainsKey(varName)))
+                    _global_variables.Add(varName, HPType.CreateType(FLOAT_INITIAL));
             }
 
             // @512~@767: int32 R0~R255
             for (; index < 768; index++)
             {
                 var varName = string.Format("@{0}", index);
-                if (!(GlobalVariables.ContainsKey(varName)))
-                    GlobalVariables.Add(varName, HPType.CreateType(IntegerInitial));
+                if (!(_global_variables.ContainsKey(varName)))
+                    _global_variables.Add(varName, HPType.CreateType(INTEGER_INITIAL));
             }
 
             // @768~@2047: float variables store in ROM
             for (; index < 2048; index++)
             {
                 var varName = string.Format("@{0}", index);
-                if (!(GlobalVariables.ContainsKey(varName)))
-                    GlobalVariables.Add(varName, HPType.CreateType(FloatInitial));
+                if (!(_global_variables.ContainsKey(varName)))
+                    _global_variables.Add(varName, HPType.CreateType(FLOAT_INITIAL));
             }
 
             // @10000~@19999: int32 R0~R9999 
@@ -78,43 +102,43 @@ namespace HPVariableRepository
             for (; index < 20000; index++)
             {
                 var varName = string.Format("@{0}", index);
-                if (!(GlobalVariables.ContainsKey(varName)))
-                    GlobalVariables.Add(varName, HPType.CreateType(IntegerInitial));
+                if (!(_global_variables.ContainsKey(varName)))
+                    _global_variables.Add(varName, HPType.CreateType(INTEGER_INITIAL));
             }
         }
 
         public bool IsGlobal(string name)
         {
-            return GlobalVariables.ContainsKey(name);
+            return _global_variables.ContainsKey(name);
         }
 
         public bool IsLocal(string name)
         {
-            return CurrentLocalVariables.ContainsKey(name);
+            return _current_local_variables.ContainsKey(name);
         }
 
         public void SetVariable(string name, HPType value)
         {
-            if (GlobalVariables.ContainsKey(name))
+            if (_global_variables.ContainsKey(name))
             {
-                var newLiteral = ValidateType(GlobalVariables[name], value, name);
-                GlobalVariables[name].SetLiteral(newLiteral);
+                var newLiteral = validate_type(_global_variables[name], value, name);
+                _global_variables[name].SetLiteral(newLiteral);
             }
-            else if (CurrentLocalVariables.ContainsKey(name))
+            else if (_current_local_variables.ContainsKey(name))
             {
-                var newLiteral = ValidateType(CurrentLocalVariables[name], value, name);
-                CurrentLocalVariables[name].SetLiteral(newLiteral);
+                var newLiteral = validate_type(_current_local_variables[name], value, name);
+                _current_local_variables[name].SetLiteral(newLiteral);
             }
-            else if (IsIdentifier(name))
+            else if (is_identifier(name))
             {
-                CurrentLocalVariables.Add(name, new HPType(value));
+                _current_local_variables.Add(name, new HPType(value));
             }
             else
                 throw new Exception(string.Format("Invalid Variable Name '{0}'", name));
             OnVariableAssigned(name, LoadVariable(name));
         }
 
-        private static string ValidateType(HPType variableValue, HPType value, string name)
+        private static string validate_type(HPType variableValue, HPType value, string name)
         {
             if (variableValue.Type == value.Type)
                 return value.Literal;
@@ -137,7 +161,7 @@ namespace HPVariableRepository
             }
         }
 
-        private static bool IsIdentifier(string name)
+        private static bool is_identifier(string name)
         {
             try
             {
@@ -157,24 +181,25 @@ namespace HPVariableRepository
 
         public void CreateNewLocalVariablesScope()
         {
-            CurrentLocalVariables = new Dictionary<string, HPType>();
-            LocalVariablesStack.Push(CurrentLocalVariables);
+            var newLocalVarDB = new Dictionary<string, HPType>();
+            _local_variables_stack.Push(newLocalVarDB);
+            _current_local_variables = newLocalVarDB;
         }
 
         public void ReturnPreviousLocalVariablesScope()
         {
-            LocalVariablesStack.Pop();
-            CurrentLocalVariables = LocalVariablesStack.Pop();
-            LocalVariablesStack.Push(CurrentLocalVariables);
+            _local_variables_stack.Pop();
+            _current_local_variables = _local_variables_stack.Pop();
+            _local_variables_stack.Push(_current_local_variables);
         }
 
         public HPType LoadVariable(string varName)
         {
-            if (GlobalVariables.ContainsKey(varName))
-                return GlobalVariables[varName];
-            if (CurrentLocalVariables.ContainsKey(varName))
-                return CurrentLocalVariables[varName];
-            throw new Exception(string.Format("Unrecognized Identifiers '{0},", varName));
+            if (_global_variables.ContainsKey(varName))
+                return _global_variables[varName];
+            if (_current_local_variables.ContainsKey(varName))
+                return _current_local_variables[varName];
+            throw new Exception(string.Format("Unrecognized Identifiers '{0}'", varName));
         }
 
         public static HPType LoadReturnValueMacroFunction(string name, List<HPType> args)

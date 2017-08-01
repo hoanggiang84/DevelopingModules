@@ -21,12 +21,23 @@ namespace MacroPLC
                 NotifyStep.Invoke(this, new StepExecuteArg(task, line_num));
         }
 
-        public VariableRepository Variables { get; set; }
+        private VariableRepository _variables = new VariableRepository();
+        public VariableRepository Variables
+        {
+            get { return _variables; }
+            set
+            {
+                if (value == null)
+                    throw new NullReferenceException("Null Variables Repository");
+
+                _variables = value;
+                MathExpression.VarDB = _variables;
+            }
+        }
 
         public MacroExecutor(List<Task> compiledTasks)
         {
             this.compiledTasks = compiledTasks;
-            Variables = new VariableRepository();
             Variables.InitializeVariables();
             MathExpression.VarDB = Variables;
         }
@@ -44,7 +55,7 @@ namespace MacroPLC
         private void ResetExecute()
         {
             taskIndex = 0;
-            Variables.InitializeVariables();
+            Variables.ResetLocalVariables();
         }
 
         private int taskIndex;

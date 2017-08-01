@@ -74,7 +74,7 @@ namespace MacroPLCTest
             executor.Variables.SetVariable("#12", HPType.CreateType(10));
             executor.Variables.SetVariable("@15", HPType.CreateType(12));
             ExecuteTasksAndAssertNextExecuteLine(0);
-            Assert.AreEqual("G01 X1 Y345.34 Z11 F12",ExecutedCode);
+            Assert.AreEqual("G01 X1. Y345.34 Z11. F12.",ExecutedCode);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace MacroPLCTest
             executor.Variables.SetVariable("#12", HPType.CreateType(10));
             executor.Variables.SetVariable("@15", HPType.CreateType(12));
             ExecuteTasksAndAssertNextExecuteLine(0);
-            Assert.AreEqual("G01 X1 Y345.34 Z13 F12", ExecutedCode);
+            Assert.AreEqual("G01 X1. Y345.34 Z13. F12.", ExecutedCode);
         }
 
         [Test]

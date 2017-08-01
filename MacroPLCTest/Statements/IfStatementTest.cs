@@ -15,7 +15,7 @@ namespace MacroPLCTest
                                    "ENDIF; ";
             var compiler = new MacroCompiler(src_code);
             compiler.Compile();
-            var executor = new MacroExecutor(compiler.compiledTasks);
+            var executor = new MacroExecutor(compiler.compiledTasks) {Variables = varDB};
             executor.NotifyStep += StepNotify;
 
             var line_num = executor.StepExecute();

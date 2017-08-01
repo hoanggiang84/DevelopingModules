@@ -63,6 +63,26 @@ namespace MacroPLCTest
             Assert.Throws<Exception>(() => VarDB.LoadVariable(varName1));
         }
 
+        [Test]
+        public void InstantiateVariable_ResetToInitialState()
+        {
+            var varDB1 = new VariableRepository();
+            varDB1.SetVariable("#1",HPType.CreateType(10));
+
+            var varDB2 = new VariableRepository(varDB1);
+            var val = varDB2.LoadVariable("#1");
+            Assert.AreEqual("10",val.Literal);
+
+            varDB2.SetVariable("#1", HPType.CreateType(20));
+            val = varDB2.LoadVariable("#1");
+            Assert.AreEqual("20", val.Literal);
+
+            varDB2.ResetLocalVariables();
+            val = varDB2.LoadVariable("#1");
+            Assert.AreEqual("10", val.Literal);
+
+
+        }
 
     }
 }

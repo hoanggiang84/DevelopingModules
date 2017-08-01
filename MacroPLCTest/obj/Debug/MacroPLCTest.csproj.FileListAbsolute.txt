@@ -1,3 +1,4 @@
+D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\obj\Debug\ResolveAssemblyReference.cache
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\MacroPLCTest.dll
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\MacroPLCTest.pdb
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPMacroCompilerComponents.dll
@@ -25,6 +26,5 @@ D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\Developing
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPMathExpression.pdb
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\HPTypes.pdb
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\MacroPLC.pdb
-D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\obj\Debug\ResolveAssemblyReference.cache
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\obj\Debug\MacroPLCTest.dll
 D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\obj\Debug\MacroPLCTest.pdb
