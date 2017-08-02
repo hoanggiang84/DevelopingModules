@@ -15,11 +15,11 @@ namespace MacroPLC
         private Token FunctionToken;
         private List<List<Token>> argumentList = new List<List<Token>>();
 
-        public BuiltInFunctionStatement(IEnumerable<Token> tokens, VariableRepository varDB)
+        public BuiltInFunctionStatement(IEnumerable<Token> tokens, VariableRepository variables)
         {
             tokenManager = new TokenManager(tokens);
-            this.varDB = varDB;
-            MathExpression.VarDB = varDB;
+            this.varDB = variables;
+            MathExpression.Variables = variables;
             GetInfo();
         }
 
@@ -74,8 +74,8 @@ namespace MacroPLC
         public override void Step()
         {
             var args = (from expr in argumentList 
-                        where expr.Count > 0 
-                        select MathExpression.Create(expr).Evaluate()).ToList();
+                        where expr.Count > 0
+                        select MathExpression.Create(expr, varDB).Evaluate()).ToList();
 
             if(HPFUNC.IsVoidMacroFunction(FunctionToken.Text))
                 HPFUNC.GetVoidFunction(FunctionToken.Text).Invoke(args);

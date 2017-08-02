@@ -14,10 +14,10 @@ namespace MacroPLC
         private List<Token> indexTokens = new List<Token>();
         private List<Token> expressionTokens = new List<Token>();
 
-        public Assignment(IEnumerable<Token> tokens, VariableRepository varDB)
+        public Assignment(IEnumerable<Token> tokens, VariableRepository variables)
         {
-            this.varDB = varDB;
-            MathExpression.VarDB = varDB;
+            varDB = variables;
+            MathExpression.Variables = variables;
             tokenManager = new TokenManager(tokens);
             GetInfo();
         }
@@ -86,12 +86,12 @@ namespace MacroPLC
             // Get index value
             if (indexTokens.Count > 0)
             {
-                var index = MathExpression.Create(indexTokens).Evaluate();
+                var index = MathExpression.Create(indexTokens, varDB).Evaluate();
                 validateIndexValue(index);
                 varName += index.Literal;
             }
-            
-            var value = MathExpression.Create(expressionTokens).Evaluate();
+
+            var value = MathExpression.Create(expressionTokens, varDB).Evaluate();
             varDB.SetVariable(varName, value);
         }
 

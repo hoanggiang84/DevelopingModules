@@ -23,7 +23,7 @@ namespace MacroPLC
         public GCodeStatement(IEnumerable<Token> tokens, VariableRepository varDB)
         {
             this.varDB = varDB;
-            MathExpression.VarDB = this.varDB;
+            MathExpression.Variables = this.varDB;
             tokenManager = new TokenManager(tokens);
             get_info();
         }
@@ -50,7 +50,8 @@ namespace MacroPLC
             var nextWord = nextToken.Text;
             if (nextWord.Length > 1)
             {
-                _parameter_evaluations.Add(nextWord[0], MathExpression.Create(nextWord.Substring(1)));
+                _parameter_evaluations.Add(nextWord[0], 
+                    MathExpression.Create(nextWord.Substring(1), varDB));
 
             }
             else
@@ -59,7 +60,7 @@ namespace MacroPLC
                 if (nextToken.Text == MacroKeywords.PARANTHESE_OPEN)
                 {
                     var paramTokens = MatchParantheseExpression();
-                    var paramEval = MathExpression.Create(paramTokens);
+                    var paramEval = MathExpression.Create(paramTokens, varDB);
                     _parameter_evaluations.Add(nextWord[0], paramEval);
                 }
             }
@@ -109,7 +110,7 @@ namespace MacroPLC
             var files = dir_info.GetFiles();
             foreach (var fileInfo in files)
             {
-                if (fileInfo.Name.Length <= 1) continue;
+                if (fileInfo.Name.Length != 5) continue;
 
                 var num_str = fileInfo.Name.Substring(1);
                 int num;
@@ -139,11 +140,14 @@ namespace MacroPLC
                         varDB.SetVariable(local_val.Key, local_val.Value);
 
                     executor.Variables = varDB;
-                    MathExpression.VarDB = varDB;
+                    MathExpression.Variables = varDB;
                     executor.Execute();
                     varDB.ReturnPreviousLocalVariablesScope();
+                    return;
                 }
             }
+            
+            throw new Exception(string.Format("File not found '{0}{1:0000}'",code_char, code_num));
         }
 
         private string get_macro_file_name(out char char_code , out int number)

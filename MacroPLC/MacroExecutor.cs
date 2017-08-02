@@ -31,7 +31,7 @@ namespace MacroPLC
                     throw new NullReferenceException("Null Variables Repository");
 
                 _variables = value;
-                MathExpression.VarDB = _variables;
+                MathExpression.Variables = _variables;
             }
         }
 
@@ -39,7 +39,7 @@ namespace MacroPLC
         {
             this.compiledTasks = compiledTasks;
             Variables.InitializeVariables();
-            MathExpression.VarDB = Variables;
+            MathExpression.Variables = Variables;
         }
 
         public void Execute()
@@ -83,7 +83,7 @@ namespace MacroPLC
                         break;
 
                     case TaskType.BOOLEAN_EVALUATE:
-                        var boolEval = MathExpression.Create(curTask.Tokens).Evaluate();
+                        var boolEval = MathExpression.Create(curTask.Tokens, Variables).Evaluate();
                         if (boolEval.Type != VariableType.BOOL)
                         {
                             var bExpr = curTask.Tokens.Aggregate(string.Empty, (current, t) => current + (t.Text + " "));
@@ -94,7 +94,7 @@ namespace MacroPLC
                         break;
 
                     case TaskType.ARITHMETIC_EVALUATE:
-                        pre_value = MathExpression.Create(curTask.Tokens).Evaluate();
+                        pre_value = MathExpression.Create(curTask.Tokens, Variables).Evaluate();
                         notify_step(curTask.Type, pre_value.Literal, lineNumber);
                         break;
 
@@ -126,7 +126,7 @@ namespace MacroPLC
                         break;
 
                     case TaskType.BRANCH_EQUAL:
-                        var caseValue = MathExpression.Create(curTask.Tokens).Evaluate();
+                        var caseValue = MathExpression.Create(curTask.Tokens, Variables).Evaluate();
 
                         if (pre_value == null)
                             throw new Exception("Execution Error: BRANCH_EQUAL. Null Arithmetic Expression");

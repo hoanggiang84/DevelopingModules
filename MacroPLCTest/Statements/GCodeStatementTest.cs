@@ -75,6 +75,22 @@ namespace MacroPLCTest
         }
 
         [Test]
+        public void GCodeExtensionStatement_InvalidName_ThrowException()
+        {
+            var tokens = GetTokens("M300;");    // File name is "M300" (should be "M0300")
+            var statement = new GCodeStatement(tokens, varDB);
+            try
+            {
+                statement.Step();
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.True(ex.Message.Contains("File not found 'M0300'"));
+            }
+        }
+
+        [Test]
         public void GCodeExtensionStatement_withArguments()
         {
             varDB.SetVariable("#12", HPType.CreateType(10));

@@ -15,11 +15,11 @@ namespace MacroPLC
         private List<MacroStatement> trueStatements;
         private List<MacroStatement> falseStatements; 
 
-        public IfStatement(List<List<Token>> tokens, VariableRepository varDB)
+        public IfStatement(List<List<Token>> tokens, VariableRepository variables)
         {
             this.tokens = tokens;
-            this.varDB = varDB;
-            MathExpression.VarDB = varDB;
+            this.varDB = variables;
+            MathExpression.Variables = variables;
             GetInfo();
         }
 
