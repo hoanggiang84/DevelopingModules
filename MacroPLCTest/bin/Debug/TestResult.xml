@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\MacroPLCTest.dll" total="93" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2017-08-02" time="15:50:46">
+  <environment nunit-version="2.5.10.11092" clr-version="2.0.50727.8762" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="d:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE" machine-name="ADMIN-GIANG" user="Admin" user-domain="ADMIN-GIANG" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="D:\WorkSpace\0_CurrentWork\VCSharp_Projects\WINCE_Projects\HPCompiler\DevelopingModules\MacroPLCTest\bin\Debug\MacroPLCTest.dll" executed="True" result="Success" success="True" time="1.598" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="MacroPLCTest" executed="True" result="Success" success="True" time="1.594" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="AssignmentTest" executed="True" result="Success" success="True" time="0.292" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.AssignmentTest.InvalidIndexerSyntax_ThrowException" executed="True" result="Success" success="True" time="0.142" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.InvalidSyntaxNoEqual_ThrowException" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.InvalidSyntaxNoValidVariable_ThrowException" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.VariableAssignment_VariableValueSet" executed="True" result="Success" success="True" time="0.045" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.VariableWithMathExpressionIndex_VariableValueSet" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.VariableWithNegativeIndexAssignment_ThrowException" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.VariableWithNonIntegerIndexAssignment_ThrowException" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.VariableWithNumberIndexAssignment_VariableValueSet" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+              <test-case name="MacroPLCTest.AssignmentTest.VariableWithVariableIndex_VariableValueSet" executed="True" result="Success" success="True" time="0.021" asserts="1" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="BuiltInFuncTest" executed="True" result="Success" success="True" time="0.122" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.BuiltInFuncTest.BuiltInTest_ExistFunctionName" executed="True" result="Success" success="True" time="0.100" asserts="0" />
+              <test-case name="MacroPLCTest.BuiltInFuncTest.BuiltInTest_FunctionNameWithoutParanthesis_throwException" executed="True" result="Success" success="True" time="0.005" asserts="2" />
+              <test-case name="MacroPLCTest.BuiltInFuncTest.BuiltInTest_NonExistFunctionName_throwException" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+              <test-case name="MacroPLCTest.BuiltInFuncTest.BuiltInTest_ReturnValueFunction" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="GCodeStatementTest" executed="True" result="Success" success="True" time="0.348" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.GCodeStatementTest.GCodeExtensionStatement_InvalidName_ThrowException" executed="True" result="Success" success="True" time="0.133" asserts="1" />
+              <test-case name="MacroPLCTest.GCodeStatementTest.GCodeExtensionStatement_withArguments" executed="True" result="Success" success="True" time="0.096" asserts="1" />
+              <test-case name="MacroPLCTest.GCodeStatementTest.GCodeExtensionStatement_withoutArguments" executed="True" result="Success" success="True" time="0.076" asserts="1" />
+              <test-case name="MacroPLCTest.GCodeStatementTest.GCodeStatement_InvalidGCode" executed="True" result="Success" success="True" time="0.011" asserts="1" />
+              <test-case name="MacroPLCTest.GCodeStatementTest.GCodeStatement_WithNestedParantheses" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+              <test-case name="MacroPLCTest.GCodeStatementTest.GCodeStatement_WithNumberParameters" executed="True" result="Success" success="True" time="0.012" asserts="0" />
+              <test-case name="MacroPLCTest.GCodeStatementTest.GCodeStatement_WithVariableParameters" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="GMCodeExtensionTest" executed="True" result="Success" success="True" time="0.005" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.GMCodeExtensionTest.validateInValidCode_returnFalse" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+              <test-case name="MacroPLCTest.GMCodeExtensionTest.validateValidCode_returnTrue" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="MacroPLCTest.GMCodeExtensionTest.validateValidCodeWithParameter_returnTrue" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="MacroPLCTest.GMCodeExtensionTest.validateValidTokens_returnTrue" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="IfStatementTest" executed="True" result="Success" success="True" time="0.146" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.IfStatementTest.TestIfTrue_ExecuteAssignment" executed="True" result="Success" success="True" time="0.146" asserts="0" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="MacroCompilerTest" executed="True" result="Success" success="True" time="0.028" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_assigment_returnAsignmentTask" executed="True" result="Success" success="True" time="0.003" asserts="3" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_for_returnForTasks" executed="True" result="Success" success="True" time="0.001" asserts="18" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_gcode_returnGCodeTask" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_gotoInvalidLabel_throwException" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_gotoValidLabel_returnBranchTask" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_if_returnTaskList" executed="True" result="Success" success="True" time="0.000" asserts="10" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_ifElseIfStatement_returnTaskList" executed="True" result="Success" success="True" time="0.000" asserts="29" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_ifElseStatement_returnTaskList" executed="True" result="Success" success="True" time="0.000" asserts="17" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_ifWithManyStatemets_returnTaskList" executed="True" result="Success" success="True" time="0.001" asserts="12" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_labelGoto_returnBranchTask" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_loop_returnLoopTasks" executed="True" result="Success" success="True" time="0.001" asserts="7" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_loopBreak_returnLoopTasks" executed="True" result="Success" success="True" time="0.000" asserts="12" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_loopIfBreak_returnLoopTasks" executed="True" result="Success" success="True" time="0.000" asserts="18" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_macroFunction_returnFunctionTask" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_manySimpleStatements_returnTaskList" executed="True" result="Success" success="True" time="0.000" asserts="4" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_repeatUntil_returnWhileTasks" executed="True" result="Success" success="True" time="0.001" asserts="12" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_switch_returnSwitchTasks" executed="True" result="Success" success="True" time="0.001" asserts="37" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_switchDuplicateCase_throwException" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="MacroPLCTest.MacroCompilerTest.Compile_while_returnWhileTasks" executed="True" result="Success" success="True" time="0.001" asserts="13" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="MacroExecutorTest" executed="True" result="Success" success="True" time="0.466" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.MacroExecutorTest.StepCompile_Built_InFunction" executed="True" result="Success" success="True" time="0.082" asserts="1" />
+              <test-case name="MacroPLCTest.MacroExecutorTest.StepCompileAssignment" executed="True" result="Success" success="True" time="0.071" asserts="2" />
+              <test-case name="MacroPLCTest.MacroExecutorTest.StepCompileAssignment_throwExceptionOfMissedEndStatement" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="MacroPLCTest.MacroExecutorTest.StepCompileAssignmentWithIndexer" executed="True" result="Success" success="True" time="0.082" asserts="2" />
+              <test-case name="MacroPLCTest.MacroExecutorTest.StepCompileGCode" executed="True" result="Success" success="True" time="0.077" asserts="1" />
+              <test-case name="MacroPLCTest.MacroExecutorTest.StepCompileGcode_withNestedParantheses" executed="True" result="Success" success="True" time="0.070" asserts="2" />
+              <test-case name="MacroPLCTest.MacroExecutorTest.StepCompileGcode_withVariableParameters" executed="True" result="Success" success="True" time="0.078" asserts="2" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="MacroLexicalScannerTest" executed="True" result="Success" success="True" time="0.001" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.MacroLexicalScannerTest.ScanNullorEmptyString" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="NotEmptyStringLexicalScannerTest" executed="True" result="Success" success="True" time="0.020" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.MacroLexicalScannerTest.ScanNullorEmptyString" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanGlobalVariable" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanIdentifierGCodeParameters" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanIdentifierToken" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanIdentifierWithNumberToken" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanInvalidRationalNumberToken" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanLessSymbolToken" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanLocalVariable" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanNaturalNumberToken" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanRandomSymbolToken" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanRationalNumberToken" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanscanEndSource" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanStartCharOfGlobalVariable" executed="True" result="Success" success="True" time="0.001" asserts="4" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanStartCharOfLocalVariable" executed="True" result="Success" success="True" time="0.001" asserts="4" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanUndenfiedLetterToken" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanUndenfiedSymbolToken" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanWhiteSpacesThenNaturalNumberToken" executed="True" result="Success" success="True" time="0.000" asserts="4" />
+              <test-case name="MacroPLCTest.NotEmptyStringLexicalScannerTest.ScanWhiteString" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="SourceLineTest" executed="True" result="Success" success="True" time="0.002" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.SourceLineTest.SourceLine_AssignmentType" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.SourceLineTest.SourceLine_LabelType" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="SourceManagerTest" executed="True" result="Success" success="True" time="0.005" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.SourceManagerTest.GetFirstLine_returnLineIndexAndContent" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.SourceManagerTest.GetLineAtIndex_returnLineContent" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="MacroPLCTest.SourceManagerTest.GetLinesUntilEnd_returnIndicesAndLineContents" executed="True" result="Success" success="True" time="0.001" asserts="6" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="SourceReaderTest" executed="True" result="Success" success="True" time="0.009" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.SourceReaderTest.InvalidSourceTest" executed="True" result="Success" success="True" time="0.001" asserts="3" />
+              <test-case name="MacroPLCTest.SourceReaderTest.ReadBeyondSource_OneLineWithEnter" executed="True" result="Success" success="True" time="0.000" asserts="3" />
+              <test-case name="MacroPLCTest.SourceReaderTest.ReadNextLine_OneLine" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="MacroPLCTest.SourceReaderTest.ReadNextLine_OneLineWithEnter" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="MacroPLCTest.SourceReaderTest.ReadSource_ManyLinesWithEnter" executed="True" result="Success" success="True" time="0.000" asserts="4" />
+              <test-case name="MacroPLCTest.SourceReaderTest.ReadSource_withExpectedResults" executed="True" result="Success" success="True" time="0.000" asserts="7" />
+              <test-case name="MacroPLCTest.SourceReaderTest.ResetSourceIndex" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="Specification" executed="True" result="Inconclusive" success="False" time="0.000" asserts="0" />
+          <test-suite type="TestFixture" name="StatementTest" executed="True" result="Inconclusive" success="False" time="0.000" asserts="0" />
+          <test-suite type="TestFixture" name="TokenManagerTest" executed="True" result="Success" success="True" time="0.005" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.TokenManagerTest.GetNextToken_IgnoredWhiteToken" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+              <test-case name="MacroPLCTest.TokenManagerTest.GetNextToken_LastToken_ReturnEndToken" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+              <test-case name="MacroPLCTest.TokenManagerTest.LookNextToken_IgnoredWhiteToken" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="MacroPLCTest.TokenManagerTest.LookNextToken_LastToken_ReturnEndToken" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="VariableRepositoryTest" executed="True" result="Success" success="True" time="0.123" asserts="0">
+            <results>
+              <test-case name="MacroPLCTest.VariableRepositoryTest.InstantiateLocalVariable_ResetToInitialState" executed="True" result="Success" success="True" time="0.077" asserts="3" />
+              <test-case name="MacroPLCTest.VariableRepositoryTest.InstantiateVariable_ResetToInitialState" executed="True" result="Success" success="True" time="0.004" asserts="3" />
+              <test-case name="MacroPLCTest.VariableRepositoryTest.LoadLocalVariableInDifferentScope_ThrowException" executed="True" result="Success" success="True" time="0.015" asserts="2" />
+              <test-case name="MacroPLCTest.VariableRepositoryTest.LoadLocalVariablesHaveSameNameInDifferentScope_ReturnCurrentScopeVariable" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+              <test-case name="MacroPLCTest.VariableRepositoryTest.LocalVariableRepository_SetVariable_LoadEqualVariable" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+              <test-case name="MacroPLCTest.VariableRepositoryTest.SetAndLoadGlobalVariable" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+              <test-case name="MacroPLCTest.VariableRepositoryTest.SetAndLoadLocalVariable" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

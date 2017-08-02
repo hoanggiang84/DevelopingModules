@@ -9,7 +9,7 @@ namespace MacroLexScn
     {
         private const int INVALID_INDEX = -1;
 
-        private string source;
+        private string _source;
         public MacroLexicalScanner(string source)
         {
             Source = source;
@@ -20,137 +20,137 @@ namespace MacroLexScn
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    throw new ArgumentException("Source is null or empty");
-                source = value;
-                currentIndex = 0;
+                    throw new ArgumentException("Empty source");
+                _source = value;
+                _current_index = 0;
             }
         }
 
-        private int currentIndex;
+        private int _current_index;
         public int CurrentIndex
         {
             get
             {
-                return currentIndex >= source.Length ? INVALID_INDEX : currentIndex;
+                return _current_index >= _source.Length ? INVALID_INDEX : _current_index;
             }
         }
 
         public Token ScanNext()
         {
-            if (currentIndex >= source.Length)
+            if (_current_index >= _source.Length)
                 return new Token(string.Empty, TokenType.END);
 
-            var c = lookNextChar();
+            var c = look_next_char();
 
             if(char.IsWhiteSpace(c))
-                return new Token(getWhiteString(), TokenType.WHITE_SPACE);
+                return new Token(get_white_string(), TokenType.WHITE_SPACE);
 
             if(char.IsDigit(c))
-                return new Token(getNumberString(), TokenType.NUMBER);
+                return new Token(get_number_string(), TokenType.NUMBER);
             
-            if(IsStartLocalVariable(c))
-                return new Token(getVariable(), TokenType.LOCAL_VAR);
+            if(local_variable_char(c))
+                return new Token(get_variable(), TokenType.LOCAL_VAR);
 
-            if(IsStartGlobalVariable(c))
-                return new Token(getVariable(),TokenType.GLOBAL_VAR);
+            if(global_variable_char(c))
+                return new Token(get_variable(),TokenType.GLOBAL_VAR);
 
-            if(IsValidIdentifierChar(c))
-                return new Token(getIdentifierString(), TokenType.IDENTIFIER);
+            if(valid_identifier_char(c))
+                return new Token(get_identifier_string(), TokenType.IDENTIFIER);
 
-            if(IsValidSymbol(c))
-                return new Token(getSymbolString(), TokenType.SYMBOL);
+            if(valid_symbol(c))
+                return new Token(get_symbol_string(), TokenType.SYMBOL);
 
-            return getUndefinedString();
+            return get_undefined_string();
         }
 
-        private string getVariable()
+        private string get_variable()
         {
-            var c = lookNextChar();
+            var c = look_next_char();
             var varStr = string.Empty;
-            if (IsStartLocalVariable(c) || IsStartGlobalVariable(c))
-                varStr += getNextChar();
+            if (local_variable_char(c) || global_variable_char(c))
+                varStr += get_next_char();
             else
                 return varStr;
 
-            varStr += getPositiveNaturalNumber();
+            varStr += get_positive_natural_number();
             return varStr;
         }
 
-        private static bool IsStartGlobalVariable(char c)
+        private static bool global_variable_char(char c)
         {
             return c == '@';
         }
 
-        private static bool IsStartLocalVariable(char c)
+        private static bool local_variable_char(char c)
         {
             return c == '#';
         }
 
-        private static bool IsValidIdentifierChar(char c)
+        private static bool valid_identifier_char(char c)
         {
             return char.IsLetter(c) && (c < 128);
         }
 
-        private Token getUndefinedString()
+        private Token get_undefined_string()
         {
             var undefined = string.Empty;
-            while (IsUndefinedChar(lookNextChar()) && currentIndex < source.Length)
+            while (undefined_char(look_next_char()) && _current_index < _source.Length)
             {
-                undefined += getNextChar();
+                undefined += get_next_char();
             }
             return new Token(undefined, TokenType.UNDEFINED);
         }
 
-        private bool IsUndefinedChar(char c)
+        private bool undefined_char(char c)
         {
-            return !(char.IsWhiteSpace(c) | char.IsDigit(c) | IsValidIdentifierChar(c) | IsValidSymbol(c));
+            return !(char.IsWhiteSpace(c) | char.IsDigit(c) | valid_identifier_char(c) | valid_symbol(c));
         }
 
-        private string getSymbolString()
+        private string get_symbol_string()
         {
-            var c = getNextChar();
+            var c = get_next_char();
             var symbol = string.Empty;
             symbol += c;
             switch (c)
             {
                 case '<':
-                    if (lookNextChar() == '=')
+                    if (look_next_char() == '=')
                     {
-                        getNextChar();
+                        get_next_char();
                         return "<=";
                     }
-                    if (lookNextChar() == '>')
+                    if (look_next_char() == '>')
                     {
-                        getNextChar();
+                        get_next_char();
                         return "<>";
                     }
                     break;
 
                 case '>':
-                    if (lookNextChar() == '=')
+                    if (look_next_char() == '=')
                     {
-                        getNextChar();
+                        get_next_char();
                         return ">=";
                     }
                     break;
 
                 case '/':
-                    if (lookNextChar() == '*')
+                    if (look_next_char() == '*')
                     {
-                        getNextChar();
+                        get_next_char();
                         return "/*";
                     }
-                    if (lookNextChar() == '/')
+                    if (look_next_char() == '/')
                     {
-                        getNextChar();
+                        get_next_char();
                         return "//";
                     }
                     break;
 
                 case '*':
-                    if (lookNextChar() == '/')
+                    if (look_next_char() == '/')
                     {
-                        getNextChar();
+                        get_next_char();
                         return "*/";
                     }
                     break;
@@ -159,73 +159,73 @@ namespace MacroLexScn
             return symbol;
         }
 
-        private bool IsValidSymbol(char c)
+        private bool valid_symbol(char c)
         {
             return MacroKeywords.ValidSymbols
                 .Any(word => word.StartsWith(c.ToString(CultureInfo.InvariantCulture)));
         }
 
-        private string getIdentifierString()
+        private string get_identifier_string()
         {
             // Identifier has form: [letters][number]
             var ident = string.Empty;
-            while (IsValidIdentifierChar(lookNextChar()))
+            while (valid_identifier_char(look_next_char()))
             {
-                ident += getNextChar();
-                if (!char.IsDigit(lookNextChar())) continue;
-                ident += getNumberString();
+                ident += get_next_char();
+                if (!char.IsDigit(look_next_char())) continue;
+                ident += get_number_string();
                 return ident;
             }
             return ident;
         }
 
-        private string getNumberString()
+        private string get_number_string()
         {
             var number = string.Empty;
-            number += getPositiveNaturalNumber();
+            number += get_positive_natural_number();
 
-            if(lookNextChar() == '.')
+            if(look_next_char() == '.')
             {
-                number += getNextChar();
-                number += getPositiveNaturalNumber();
+                number += get_next_char();
+                number += get_positive_natural_number();
             }
             return number;
         }
 
-        private string getPositiveNaturalNumber()
+        private string get_positive_natural_number()
         {
             var num = string.Empty;
-            while (char.IsNumber(lookNextChar()))
+            while (char.IsNumber(look_next_char()))
             {
-                num += getNextChar();
+                num += get_next_char();
             }
             return num;
         }
 
-        private string getWhiteString()
+        private string get_white_string()
         {
             var whiteStr = string.Empty;
-            var c = lookNextChar();
+            var c = look_next_char();
             while(char.IsWhiteSpace(c))
             {
-                whiteStr += getNextChar();
-                c = lookNextChar();
+                whiteStr += get_next_char();
+                c = look_next_char();
             }
             return whiteStr;
         }
 
-        private char getNextChar()
+        private char get_next_char()
         {
             if (CurrentIndex == INVALID_INDEX)
                 return (char) 0;
-            return source[currentIndex++];
+            return _source[_current_index++];
         }
 
-        private char lookNextChar()
+        private char look_next_char()
         {
             if (CurrentIndex == INVALID_INDEX)
                 return (char)0;
-            return source[CurrentIndex];
+            return _source[CurrentIndex];
         }
     }
 }

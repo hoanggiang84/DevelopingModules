@@ -17,51 +17,51 @@ namespace MacroLexScn
                 tokens.Add(current_token);
                 current_token = lex_scn.ScanNext();
             }
-            CurrentIndex = 0;
+            _current_index = 0;
         }
 
         public TokenManager(IEnumerable<Token> tokens)
         {
             this.tokens.AddRange(tokens);
-            CurrentIndex = 0;
+            _current_index = 0;
         }
 
         private List<Token> tokens = new List<Token>();
-        private int CurrentIndex;
+        private int _current_index;
 
         public Token IgnoreWhiteGetNextToken()
         {
-            IgnoreWhiteSpace();
-            if (CurrentIndex < tokens.Count)
-                return tokens[CurrentIndex++];
-            return GetLastToken();
+            ignore_white_space();
+            if (_current_index < tokens.Count)
+                return tokens[_current_index++];
+            return get_last_token();
         }
 
         public Token IgnoreWhiteLookNextToken()
         {
-            IgnoreWhiteSpace();
-            if (CurrentIndex < tokens.Count)
-                return tokens[CurrentIndex];
-            return GetLastToken();
+            ignore_white_space();
+            if (_current_index < tokens.Count)
+                return tokens[_current_index];
+            return get_last_token();
         }
 
-        private void IgnoreWhiteSpace()
+        private void ignore_white_space()
         {
-            if(CurrentIndex >= tokens.Count)
+            if(_current_index >= tokens.Count)
                 return;
 
-            var current_token = tokens[CurrentIndex];
-            while (CurrentIndex < tokens.Count && current_token.Type == TokenType.WHITE_SPACE)
+            var current_token = tokens[_current_index];
+            while (_current_index < tokens.Count && current_token.Type == TokenType.WHITE_SPACE)
             {
                 Match(current_token.Text);
-                if (CurrentIndex >= tokens.Count)
+                if (_current_index >= tokens.Count)
                     current_token = END_TOKEN;
                 else
-                    current_token = tokens[CurrentIndex];
+                    current_token = tokens[_current_index];
             }
         }
 
-        private Token GetLastToken()
+        private Token get_last_token()
         {
             if (tokens.Count <= 0)
                 throw new Exception("Empty tokens");
@@ -77,7 +77,7 @@ namespace MacroLexScn
             Token next_token;
             try
             {
-                next_token = tokens[CurrentIndex++];
+                next_token = tokens[_current_index++];
             }
             catch
             {
@@ -92,7 +92,7 @@ namespace MacroLexScn
         public string GetIdentifier()
         {
             var next_token = IgnoreWhiteGetNextToken();
-            Validate(next_token, TokenType.IDENTIFIER);
+            validate(next_token, TokenType.IDENTIFIER);
             if (MacroKeywords.IsKeyword(next_token.Text))
                 throw new Exception(string.Format("Error: Invalid identifier name '{0}'", next_token.Text));
             return next_token.Text;
@@ -104,28 +104,28 @@ namespace MacroLexScn
             if(!(next_token.Type == TokenType.GLOBAL_VAR
                 || next_token.Type == TokenType.LOCAL_VAR
                 || MacroKeywords.IsKeyword(next_token.Text)))
-                throw new Exception(string.Format("Error: Invalid variable name '{0}'", next_token.Text));
+                throw new Exception(string.Format("Invalid variable name '{0}'", next_token.Text));
             return next_token.Text;
         }
 
         public void Reset()
         {
-            CurrentIndex = 0;
+            _current_index = 0;
         }
 
-        private void Validate(Token token, TokenType expect_type)
+        private void validate(Token token, TokenType expect_type)
         {
             if (token.Type != expect_type)
                 throw new Exception(string.Format(
-                    "Error: Invalid String '{0}'. Expected: {1}", 
+                    "Invalid String '{0}'. Expected: {1}", 
                     token.Text, expect_type));
         }
 
         public Token LookNextNextToken()
         {
-            if (CurrentIndex + 1 < tokens.Count)
-                return tokens[CurrentIndex + 1];
-            return GetLastToken();
+            if (_current_index + 1 < tokens.Count)
+                return tokens[_current_index + 1];
+            return get_last_token();
         }
     }
 }
