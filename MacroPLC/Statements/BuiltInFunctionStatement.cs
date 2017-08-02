@@ -18,8 +18,7 @@ namespace MacroPLC
         public BuiltInFunctionStatement(IEnumerable<Token> tokens, VariableRepository variables)
         {
             tokenManager = new TokenManager(tokens);
-            this.varDB = variables;
-            MathExpression.Variables = variables;
+            varDB = variables;
             GetInfo();
         }
 

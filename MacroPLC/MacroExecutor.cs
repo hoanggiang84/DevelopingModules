@@ -31,7 +31,6 @@ namespace MacroPLC
                     throw new NullReferenceException("Null Variables Repository");
 
                 _variables = value;
-                MathExpression.Variables = _variables;
             }
         }
 
@@ -39,7 +38,6 @@ namespace MacroPLC
         {
             this.compiledTasks = compiledTasks;
             Variables.InitializeVariables();
-            MathExpression.Variables = Variables;
         }
 
         public void Execute()

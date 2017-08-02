@@ -95,7 +95,7 @@ namespace MacroPLCTest
         {
             varDB.SetVariable("#12", HPType.CreateType(10));
             varDB.SetVariable("@15", HPType.CreateType(11));
-            var tokens = GetTokens("M100 A1 B345.34 C(#12+(2*2)) D(@15);");
+            var tokens = GetTokens("M200 A1 B345.34 C(#12+(2*2)) D(@15);");
             var statement = new GCodeStatement(tokens, varDB);
             statement.Step();
 
@@ -105,7 +105,7 @@ namespace MacroPLCTest
             //  @1 = @1 + 1;
             //ENDWHILE;
             // @1 = #1 + #2;
-            Assert.AreEqual("27", varDB.LoadVariable("@1").Literal);
+            Assert.AreEqual("15", varDB.LoadVariable("@1").Literal);
         }
     }
 }

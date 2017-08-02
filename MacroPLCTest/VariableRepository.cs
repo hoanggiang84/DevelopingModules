@@ -67,21 +67,50 @@ namespace MacroPLCTest
         public void InstantiateVariable_ResetToInitialState()
         {
             var varDB1 = new VariableRepository();
-            varDB1.SetVariable("#1",HPType.CreateType(10));
 
-            var varDB2 = new VariableRepository(varDB1);
-            var val = varDB2.LoadVariable("#1");
+            var local_var = new LocalVariablesRepository();
+            local_var.SetVariable("#1", HPType.CreateType(10));
+
+            varDB1.CreateNewLocalVariablesScope(local_var);
+            var val = varDB1.LoadVariable("#1");
             Assert.AreEqual("10",val.Literal);
+
+            varDB1.SetVariable("#1", HPType.CreateType(20));
+            val = varDB1.LoadVariable("#1");
+            Assert.AreEqual("20", val.Literal);
+
+            varDB1.ResetLocalVariables();
+            val = varDB1.LoadVariable("#1");
+            Assert.AreEqual("10", val.Literal);
+        }
+
+        [Test]
+        public void LocalVariableRepository_SetVariable_LoadEqualVariable()
+        {
+            var varDB = new LocalVariablesRepository();
+            varDB.SetVariable("#1", HPType.CreateType(10));
+            var v = varDB.LoadVariable("#1");
+            Assert.AreEqual("10", v.Literal);
+            Assert.AreEqual(VariableType.INT, v.Type);
+        }
+
+        [Test]
+        public void InstantiateLocalVariable_ResetToInitialState()
+        {
+            var varDB1 = new LocalVariablesRepository();
+            varDB1.SetVariable("#1", HPType.CreateType(10));
+
+            var varDB2 = new LocalVariablesRepository(varDB1);
+            var val = varDB2.LoadVariable("#1");
+            Assert.AreEqual("10", val.Literal);
 
             varDB2.SetVariable("#1", HPType.CreateType(20));
             val = varDB2.LoadVariable("#1");
             Assert.AreEqual("20", val.Literal);
 
-            varDB2.ResetLocalVariables();
+            varDB2.Reset();
             val = varDB2.LoadVariable("#1");
             Assert.AreEqual("10", val.Literal);
-
-
         }
 
     }

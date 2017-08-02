@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using HPMacroCommon;
 using HPMacroFunctions;
-using HPMathExpression;
 using HPVariableRepository;
 using MacroLexScn;
 using System.Collections.Generic;
@@ -18,8 +17,7 @@ namespace MacroPLC
         public IfStatement(List<List<Token>> tokens, VariableRepository variables)
         {
             this.tokens = tokens;
-            this.varDB = variables;
-            MathExpression.Variables = variables;
+            varDB = variables;
             GetInfo();
         }
 

@@ -23,7 +23,6 @@ namespace MacroPLC
         public GCodeStatement(IEnumerable<Token> tokens, VariableRepository varDB)
         {
             this.varDB = varDB;
-            MathExpression.Variables = this.varDB;
             tokenManager = new TokenManager(tokens);
             get_info();
         }
@@ -52,7 +51,6 @@ namespace MacroPLC
             {
                 _parameter_evaluations.Add(nextWord[0], 
                     MathExpression.Create(nextWord.Substring(1), varDB));
-
             }
             else
             {
@@ -77,17 +75,16 @@ namespace MacroPLC
             Step();
         }
 
-        private Dictionary<string,HPType> local_var_dict = new Dictionary<string, HPType>();
+        private LocalVariablesRepository local_variables = new LocalVariablesRepository();
         public override void Step()
         {
             var gCodeStatement = _command_code;
-            local_var_dict.Clear();
             foreach (var paramsEval in _parameter_evaluations)
             {
                 var paramChar = paramsEval.Key;
                 var paramValue = paramsEval.Value.Evaluate();
                 var param_name = get_local_variable(paramChar);
-                local_var_dict.Add(param_name, paramValue);
+                local_variables.SetVariable(param_name, new HPType(paramValue));
 
                 var literal = paramValue.Literal;
                 if (!literal.Contains("."))
@@ -133,14 +130,9 @@ namespace MacroPLC
 
                     var compiler = new MacroCompiler(src_code);
                     compiler.Compile();
-                    var executor = new MacroExecutor(compiler.compiledTasks);
 
-                    varDB.CreateNewLocalVariablesScope();
-                    foreach (var local_val in local_var_dict)
-                        varDB.SetVariable(local_val.Key, local_val.Value);
-
-                    executor.Variables = varDB;
-                    MathExpression.Variables = varDB;
+                    varDB.CreateNewLocalVariablesScope(local_variables);
+                    var executor = new MacroExecutor(compiler.compiledTasks) {Variables = varDB};
                     executor.Execute();
                     varDB.ReturnPreviousLocalVariablesScope();
                     return;

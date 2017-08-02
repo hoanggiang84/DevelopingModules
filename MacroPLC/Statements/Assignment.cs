@@ -17,7 +17,6 @@ namespace MacroPLC
         public Assignment(IEnumerable<Token> tokens, VariableRepository variables)
         {
             varDB = variables;
-            MathExpression.Variables = variables;
             tokenManager = new TokenManager(tokens);
             GetInfo();
         }
