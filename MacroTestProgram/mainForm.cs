@@ -7,25 +7,25 @@ namespace MacroTestProgram
 {
     public partial class mainForm : Form
     {
-        private MacroCompiler compiler;
-        private VariableRepository varDB = new VariableRepository();
+        private MacroCompiler _compiler;
+        private VariableRepository _variable_db = new VariableRepository();
 
         public mainForm()
         {
             InitializeComponent();
-            compiler = new MacroCompiler("END;");
-            varDB.InitializeVariables();
-            varDB.VariableAssigned += VariableDb_OnVariableAssigned;
-            varDB.GCodeGenerated += VariableDb_OnGCodeGenerated;
+            _compiler = new MacroCompiler("END;");
+            _variable_db.InitializeVariables();
+            _variable_db.VariableAssigned += _variabledb_OnVariableAssigned;
+            _variable_db.GCodeGenerated += _variabledb_OnGCodeGenerated;
         }
 
         private string _statement_string;
-        private void VariableDb_OnGCodeGenerated(object sender, GCodeStatementArg e)
+        private void _variabledb_OnGCodeGenerated(object sender, GCodeStatementArg e)
         {
             _statement_string += e.Statement;
         }
 
-        private void VariableDb_OnVariableAssigned(object sender, VariableArg e)
+        private void _variabledb_OnVariableAssigned(object sender, VariableArg e)
         {
             var name = e.Name;
             var value = e.Value.Literal;
@@ -37,16 +37,17 @@ namespace MacroTestProgram
             try
             {
                 textBoxExecuteResult.Text = string.Empty;
+                _current_line = MacroExecutor.INVALID_LINE_NUMBER;
 
                 var source = textBoxMacro.Text;
                 if(string.IsNullOrEmpty(source)) return;
 
-                compiler = new MacroCompiler(source);
-                compiler.Compile();
+                _compiler = new MacroCompiler(source);
+                _compiler.Compile();
 
-                _executor = new MacroExecutor(compiler.compiledTasks);
+                _executor = new MacroExecutor(_compiler.compiledTasks);
                 _executor.NotifyStep += executor_step_notify;
-                _executor.Variables = varDB;
+                _executor.Variables = _variable_db;
                 
                 textBoxExecuteResult.Text = "Compile Succeeded!\r\n";
             }
@@ -63,7 +64,7 @@ namespace MacroTestProgram
         }
 
         private MacroExecutor _executor;
-        private int _current_line;
+        private int _current_line = MacroExecutor.INVALID_LINE_NUMBER;
         private string _step_string;
         private void buttonStep_Click(object sender, EventArgs e)
         {
@@ -101,7 +102,16 @@ namespace MacroTestProgram
 
         private void buttonExecute_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            try
+            {
+                buttonCompile_Click(sender,e);
+                while (step_execute() != MacroExecutor.INVALID_LINE_NUMBER)
+                { }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }

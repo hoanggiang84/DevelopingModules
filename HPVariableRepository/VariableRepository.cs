@@ -150,11 +150,10 @@ namespace HPVariableRepository
             try
             {
                 if (char.IsLetter(name[0]) || name[0] == '#')
-                {
                     for (var i = 1; i < name.Length; i++)
                         if (!char.IsLetterOrDigit(name[i]))
                             return false;
-                }
+                
                 return true;
             }
             catch (Exception)

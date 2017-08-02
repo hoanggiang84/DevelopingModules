@@ -45,9 +45,8 @@ namespace MacroPLC
             ResetExecute();
             var lineIndex = 0;
             while (lineIndex != INVALID_LINE_NUMBER)
-            {
                 lineIndex = StepExecute();
-            }
+            
         }
 
         private void ResetExecute()

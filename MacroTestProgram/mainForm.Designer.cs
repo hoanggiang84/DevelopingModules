@@ -69,7 +69,6 @@
             // buttonExecute
             // 
             this.buttonExecute.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.buttonExecute.Enabled = false;
             this.buttonExecute.Location = new System.Drawing.Point(387, 29);
             this.buttonExecute.Name = "buttonExecute";
             this.buttonExecute.Size = new System.Drawing.Size(72, 20);
